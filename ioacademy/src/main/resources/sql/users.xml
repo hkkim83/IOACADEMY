@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.users">
+  <!-- 로그인 사용자 조회 -->
+  <select id="selectLoginUser" resultType="kr.co.ioacademy.dto.User" parameterType="java.lang.String" >
+    <![CDATA[
+      select id
+           , email
+           , name
+           , tel_no
+           , tel_no1
+           , tel_no2
+           , tel_no3
+           , email_yn
+           , join_date
+           , comment
+           , del_yn
+           , priority
+        from user
+       where del_yn = 0
+    ]]>
+    <choose>
+      <when test="id != null"><![CDATA[
+        and id = #{id}
+      ]]></when>
+      <otherwise><![CDATA[
+        and email    = binary(#{email})
+        and password = password(#{password})      
+      ]]></otherwise>
+    </choose>
+  </select>
+  
+  <!-- 사용자 조회 -->
+  <select id="selectList" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select id
+           , email
+           , name
+           , ifnull(tel_no,'') tel_no
+           , tel_no1
+           , tel_no2
+           , tel_no3
+           , email_yn
+           , join_date
+           , date_format(join_date, '%Y.%m.%d') join_ymd
+           , ifnull(comment,'') comment
+           , del_yn
+           , priority
+        from user
+       where del_yn = '0'
+    ]]>
+    <if test="id != null"><![CDATA[
+        and id = #{id}
+    ]]></if>      
+    <![CDATA[
+      order by name
+    ]]>        
+  </select>
+
+  <!-- SMS를 보내기 위한 사용자 조회 -->
+  <select id="selectSMSList" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select us.id
+           , replace(us.tel_no,'-','') tel_no
+           , concat(date_format(now(), '%Y%m%d%H%i%s'),us.id) send_key
+           , ap.curri_name
+           , ap.start_ymd
+           , ap.name
+           , ap.application_type_name
+        from user us
+        join ( select cu.curri_name
+                    , date_format(le.start_date, '%Y.%m.%d') start_ymd
+                    , us.name
+                    , c1.application_type_name
+                 from application ap
+                 join curriculum  cu on ap.curri_id = cu.curri_id
+                 join lecture     le on ap.curri_id = le.curri_id and ap.lec_id = le.lec_id
+                 left join user   us on ap.id = us.id
+                 left join 
+                      ( select comm_code, comm_name application_type_name
+                          from common
+                         where group_code = '011'
+                      ) c1 on ap.application_type = c1.comm_code
+                where ap.curri_id = #{curri_id}
+                  and ap.lec_id   = #{lec_id}
+                  and ap.id       = #{id}
+             ) ap
+       where us.priority = 'A'
+         and us.del_yn   = '0'
+         and us.sms_yn   = '1'
+    ]]>     
+  </select>
+  
+  <!-- 이메일 중복 조회 -->
+  <select id="checkID" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select id
+        from user
+       where email  = binary(#{email})
+         and del_yn = '0'
+    ]]>
+  </select>
+  
+  
+  <!-- 사용자 등록 -->
+  <insert id="insert" parameterType="HashMap" >
+    <![CDATA[
+      insert into user 
+           ( email
+           , name
+           , password
+           , join_date
+           , priority
+           , email_yn
+           , del_yn
+           , reg_user
+           , reg_date
+           , upd_user
+           , upd_date ) 
+      values 
+           ( #{email}
+           , #{name}
+           , password(#{password})
+           , date_format(now(),'%Y%m%d')
+           , 'U'
+           , if(#{email_yn} = 'on', '1', '0')
+           , '0'
+           , #{login_id} 
+           , now()
+           , #{login_id}
+           , now() )
+    ]]>
+  </insert>
+  
+  <!-- 사용자 수정 -->
+  <update id="update" parameterType="HashMap" >
+    <![CDATA[
+      update user
+         set upd_date = now()    
+           , upd_user = #{login_id}   
+    ]]>
+    <if test="password != null and !password.equals('')"><![CDATA[           
+           , password = password(#{password})
+    ]]></if>  
+    <if test="name != null and !name.equals('')"><![CDATA[           
+           , name     = #{name}
+    ]]></if> 
+    <if test="tel_no2 != null and tel_no2 != null and tel_no3 != null"><![CDATA[           
+           , tel_no   = concat(#{tel_no1},'-',#{tel_no2},'-',#{tel_no3})
+    ]]></if>  
+    <if test="tel_no1 != null and !tel_no1.equals('')"><![CDATA[           
+           , tel_no1  = #{tel_no1}
+    ]]></if>  
+    <if test="tel_no2 != null and !tel_no2.equals('')"><![CDATA[           
+           , tel_no2  = #{tel_no2}
+    ]]></if>  
+    <if test="tel_no3 != null and !tel_no3.equals('')"><![CDATA[           
+           , tel_no3  = #{tel_no3}
+    ]]></if>  
+    <if test="email_yn != null and !email_yn.equals('')"><![CDATA[           
+           , email_yn = if(#{email_yn} = 'on', '1', '0')
+    ]]></if>   
+    <if test="comment != null"><![CDATA[           
+           , comment  = #{comment}
+    ]]></if>     
+    <![CDATA[
+       where id       = #{id}
+    ]]>
+  </update>
+
+  <!-- 사용자 정보(마이페이지) 수정 -->
+  <update id="updateMypage" parameterType="HashMap" >
+    <![CDATA[
+      update user
+         set upd_date = now()    
+           , upd_user = #{login_id}   
+           , name     = #{name}
+           , tel_no   = concat(#{tel_no1},'-',#{tel_no2},'-',#{tel_no3})
+           , tel_no1  = #{tel_no1}
+           , tel_no2  = #{tel_no2}
+           , tel_no3  = #{tel_no3}
+           , email_yn = if(#{email_yn} = 'on', '1', '0')
+       where id       = #{id}
+    ]]>
+  </update> 
+
+  <!-- 비밀번호 변경 -->
+  <update id="updatePassword" parameterType="HashMap" >
+    <![CDATA[
+      update user
+         set upd_date = now()
+           , upd_user = 'system'
+           , password = password(#{password})
+       where email    = binary(#{email})
+         and del_yn   = '0'
+    ]]>
+  </update>
+      
+  <!-- 사용자 삭제 -->
+  <delete id="delete" parameterType="HashMap" >
+    <![CDATA[
+      update user
+         set del_yn = '1'
+       where id     = #{id}
+    ]]>
+  </delete>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.bookings">
+	
+  <!-- 찜 조회 -->
+	<select id="selectList" resultType="HashMap"  parameterType="java.lang.String">
+		<![CDATA[
+      select bo.curri_id
+           , bo.id
+           , bo.reg_date
+           , date_format(bo.reg_date, '%Y.%m.%d') reg_ymd
+           , cu.curri_name
+           , if(char_length(cu.curri_name) < 30, cu.curri_name, concat(left(cu.curri_name,30), ' ...')) short_name
+           , ifnull(cu.img_file,'no_image.png') img_file
+           , us.email
+           , us.name
+           , us.tel_no
+           , if((select count(*) from application ap, lecture le 
+                  where ap.curri_id = le.curri_id and ap.lec_id = le.lec_id and le.lec_status != '99'
+                    and ap.curri_id = bo.curri_id and id = bo.id and ap.del_yn = '0') > 0, 'O', 'X') application_yn
+        from booking     bo
+        join curriculum  cu
+        join user        us 
+       where bo.curri_id = cu.curri_id
+         and bo.id       = us.id
+         and cu.del_yn   = '0'
+    ]]>
+    <if test="curri_id != null"><![CDATA[           
+         and bo.curri_id   = #{curri_id}
+    ]]></if>  
+    <if test="id != null"><![CDATA[           
+         and bo.id         = #{id}
+    ]]></if>   
+    <![CDATA[ 
+       order by cu.curri_name
+		]]>
+	</select>
+	
+  <!-- SMS를 보내기 위한 수강신청 조회 -->
+  <select id="selectSMSList" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select us.id
+           , replace(us.tel_no,'-','') tel_no
+           , concat(date_format(now(), '%Y%m%d%H%i%s'),us.id) send_key
+           , cu.curri_name
+           , date_format(le.start_date, '%Y.%m.%d') start_ymd
+           , us.name
+           , '' application_type_name
+        from booking     bo
+        join curriculum  cu on bo.curri_id = cu.curri_id
+        join lecture     le on bo.curri_id = le.curri_id and lec_id = #{lec_id}
+        join user        us on bo.id = us.id
+       where bo.curri_id   = #{curri_id}
+    ]]>     
+  </select>
+    
+  <!-- 찜 중복 조회 -->
+  <select id="checkID" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select id
+        from booking
+       where curri_id  = #{curri_id}
+         and id        = #{id}
+    ]]>
+  </select>
+  
+  <!-- 찜 저장 -->
+	<insert id="insert" parameterType="HashMap">
+		<![CDATA[
+			insert into booking
+			    ( curri_id
+          , id
+			    , del_yn
+          , reg_date ) 
+		    values 
+	        ( #{curri_id}
+          , #{id}
+	        , '0' 
+          , now() )
+		]]>
+	</insert>
+	
+  <!-- 찜수정 -->
+	<update id="update" parameterType="HashMap">
+		<![CDATA[
+			update booking
+			   set del_yn     = #{del_yn}
+			 where curri_id   = #{curri_id}
+         and id         = #{id}
+		]]>
+	</update>
+	
+  <!-- 찜삭제 -->	
+	<delete id="delete" parameterType="HashMap">
+    <![CDATA[           
+      delete from booking
+       where curri_id   = #{curri_id}
+         and id         = #{id}
+    ]]>
+	</delete>
+	
+</mapper>

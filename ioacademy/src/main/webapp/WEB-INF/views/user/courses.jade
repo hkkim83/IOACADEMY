@@ -1,0 +1,82 @@
+extends ../layouts/layout
+
+block content
+  .content.con-default
+    .container.card-section
+      .title
+        h3 초급 과정
+      // Three columns of text below the carousel
+      each val in data.list1
+        .col-lg-3.col-md-4.col-xs-12
+          a(href='/courses/' + val.curri_id class='course-link' data-toggle='modal')
+            .caption-overlay
+              .caption-content
+                i.fa.fa-search-plus.fa-3x
+            .thumbnail
+              img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+              .caption
+                h4.title.text-default= val.curri_name
+                if val.start_date != '99991231' 
+                  p.sub-text= val.start_ymd + '-' + val.end_ymd
+                else
+                  p.sub-text 개강 미정
+              if val.start_date != '99991231' 
+                if(val.lec_status == '01')
+                  .status
+                    img(src='/resources/images/status_01.png')
+                else
+                  .status
+                    img(src='/resources/images/status_02.png')
+
+    .container.card-section
+      .title
+        h3 중급 과정
+      // Three columns of text below the carousel
+      each val in data.list2
+        .col-lg-3.col-md-4.col-xs-12
+          a(href='/courses/' + val.curri_id class='course-link' data-toggle='modal')
+            .caption-overlay
+              .caption-content
+                i.fa.fa-search-plus.fa-3x
+            .thumbnail
+              img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+              .caption
+                h4.title.text-default= val.curri_name
+                if val.start_date != '99991231' 
+                  p.sub-text= val.start_ymd + '-' + val.end_ymd
+                else
+                  p.sub-text 개강 미정
+              if val.start_date != '99991231' 
+                if(val.lec_status == '01')
+                  .status
+                    img(src='/resources/images/status_01.png')
+                else
+                  .status
+                    img(src='/resources/images/status_02.png')
+
+    .container.card-section
+      .title
+        h3 고급 과정
+      // Three columns of text below the carousel
+      each val in data.list3
+        .col-lg-3.col-md-4.col-xs-12
+          a(href='/courses/' + val.curri_id class='course-link' data-toggle='modal')
+            .caption-overlay
+              .caption-content
+                i.fa.fa-search-plus.fa-3x
+            .thumbnail
+              img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+              .caption
+                h4.title.text-default= val.curri_name
+                if val.start_date != '99991231' 
+                  p.sub-text= val.start_ymd + '-' + val.end_ymd
+                else
+                  p.sub-text 개강 미정
+              if val.start_date != '99991231' 
+                if(val.lec_status == '01')
+                  .status
+                    img(src='/resources/images/status_01.png')
+                else
+                  .status
+                    img(src='/resources/images/status_02.png')
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.common">
+  
+  <!-- 현재일시조회 -->
+  <select id="selectNow" resultType="HashMap"  parameterType="java.lang.String">
+    <![CDATA[
+      select date_format(now(), '%Y') year
+           , date_format(now(), '%m') month
+           , date_format(now(), '%d') day
+           , date_format(now(), '%Y%m%d') date
+    ]]>
+  </select>
+  	
+  <!-- 공통코드 조회 -->
+	<select id="selectList" resultType="HashMap"  parameterType="java.lang.String">
+		<![CDATA[
+			select group_code
+           , group_name
+           , comm_code
+           , comm_name 
+        from common
+       where group_code = #{group_code}
+		]]>
+	</select>
+	
+  <!-- 공통코드 등록 -->
+	<insert id="insert" parameterType="HashMap">
+		<![CDATA[
+			insert into common 
+			    ( group_code
+			    , group_name
+			    , comm_code
+			    , comm_name
+			    , reg_date
+			    , upd_date ) 
+		    values 
+	        ( #{group_code}
+	        , #{group_name}
+	        , #{comm_code}
+	        , #{comm_name} 
+	        , now()
+	        , now() )
+		]]>
+	</insert>
+	
+  <!-- 공통코드 수정 -->
+	<update id="update" parameterType="HashMap">
+		<![CDATA[
+			update common
+			   set comm_name  = #{comm_name}
+			     , upd_date   = now()
+			 where group_code = #{group_code}
+			   and comm_code  = #{comm_comde} 
+		]]>
+	</update>
+		
+  <!-- 공통코드 삭제 -->
+	<delete id="delete" parameterType="HashMap">
+		<![CDATA[
+			delete from common
+			 where group_code = #{group_code}
+			   and comm_code  = #{comm_comde} 
+		]]>
+	</delete>
+	
+</mapper>

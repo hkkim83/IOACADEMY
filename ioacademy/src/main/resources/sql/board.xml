@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.board">
+	
+	<select id="selectList" resultType="HashMap"  parameterType="java.lang.String">
+		<![CDATA[
+      select bo.curri_id
+           , bo.board_id
+           , bo.question
+           , bo.reply
+           , bo.reg_user
+           , ifnull(us.name, '아무개') reg_name
+           , bo.reg_date
+           , date_format(bo.reg_date, '%Y.%m.%d %H:%i') reg_ymd
+           , bo.upd_date
+           , date_format(bo.upd_date, '%Y.%m.%d %H:%i') upd_ymd
+        from board bo
+        join user us on bo.reg_user = us.id
+       where bo.curri_id = #{curri_id}
+         and us.del_yn   = 0
+         and bo.reg_date > adddate(sysdate(), interval -3 month)
+       order by bo.reg_date
+		]]>
+	</select>
+
+  <select id="selectSMSList" resultType="HashMap"  parameterType="java.lang.String">
+    <![CDATA[
+      select us.id
+           , replace(us.tel_no,'-','') tel_no
+           , concat(date_format(now(), '%Y%m%d%H%i%s'),us.id) send_key
+           , cu.curri_name
+        from user us
+        join ( select curri_name
+                 from curriculum
+                where curri_id = #{curri_id}
+             ) cu
+       where us.priority = 'A'
+         and us.del_yn   = '0'
+         and us.sms_yn   = '1'
+    ]]>
+  </select>
+
+	
+	<insert id="insert" parameterType="HashMap">
+    <selectKey keyProperty="board_id" resultType="String" order="BEFORE">
+      <![CDATA[
+        select ifnull(max(board_id),0)+1 
+          from board where curri_id = #{curri_id}
+      ]]>   
+    </selectKey>  
+		<![CDATA[
+			insert into board 
+    	    ( curri_id
+          , board_id
+    	    , question
+          , reg_user
+    	    , reg_date ) 
+		    values 
+	        ( #{curri_id}
+          , #{board_id}
+	        , #{question}
+          , #{login_id} 
+	        , now() )
+		]]>
+	</insert>
+	
+	<update id="update" parameterType="HashMap">
+    <if test="question != null and !question.equals('')"><![CDATA[    
+      update board       
+         set question   = #{question}
+    ]]></if>  
+    <if test="reply != null and !reply.equals('')"><![CDATA[ 
+      update board         
+         set reply      = #{reply}
+           , upd_user   = #{login_id}
+           , upd_date   = now()
+    ]]></if>
+    <![CDATA[  
+			 where curri_id   = #{curri_id}
+         and board_id   = #{board_id}
+		]]>
+	</update>
+		
+	<delete id="delete" parameterType="HashMap">
+    <if test="question != null and !question.equals('')"><![CDATA[    
+      delete from board
+       where curri_id   = #{curri_id}
+         and board_id   = #{board_id}
+    ]]></if>  
+    <if test="reply != null and !reply.equals('')"><![CDATA[ 
+      update board
+         set reply      = ''
+           , upd_user   = #{login_id}
+           , upd_date   = now()
+       where curri_id   = #{curri_id}
+         and board_id   = #{board_id}
+    ]]></if>
+	</delete>
+	
+</mapper>

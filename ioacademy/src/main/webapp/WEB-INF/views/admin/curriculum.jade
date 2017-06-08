@@ -1,0 +1,222 @@
+extends ../layouts/layout
+
+block content
+  .content.con-white
+    .md-container
+      .title
+        h3 과정개설
+      .row.lecture-form
+        form(action='/curriculums/'+id method='post')
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_kind')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정구분
+              .col-sm-6
+                select#curri_kind.form-control(name='curri_kind')
+                  each map in curriKindList
+                    option(value= map.comm_code selected= (val.curri_kind == map.comm_code))= map.comm_name
+              .col-sm-3
+                select#curri_type.form-control(name='curri_type')
+                  each map in curriTypeList
+                    option(value= map.comm_code selected= (val.curri_type == map.comm_code))= map.comm_name
+              .col-sm-3
+                select#curri_grade.form-control(name='curri_grade')
+                  each map in curriGradeList
+                    option(value= map.comm_code selected= (val.curri_grade == map.comm_code))= map.comm_name
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_name')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정명
+              .col-xs-12
+                input#curri_name.form-control(type='text' name='curri_name' placeholder='과정명을 입력하세요.' value=val.curri_name required='' autofocus)
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='img_file')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정이미지
+              .col-xs-12
+                input#img_file(type='hidden' value= val.img_file name='img_file' required='')
+                img#img_file_image(src='/resources/images/curriculums/'+val.img_file)  
+          .row
+            .filebox
+              .col-xs-12
+                label(for='img_file_name') 업로드
+                input#img_file_name(type='file' name='img_file_name')  
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_prefix')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정 인트로
+              .col-xs-12
+                input#curri_prefix.form-control(type='text' name='curri_prefix' placeholder='과정 인트로를 입력하세요.' value=val.curri_prefix required='')
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_intro')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정 소개
+              .col-xs-12
+                textarea#curri_intro.form-control(rows='2' name='curri_intro' placeholder='과정 소개를 입력하세요.' required='')=val.curri_intro
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_target')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;수강대상
+              .col-xs-12
+                textarea#curri_target.form-control(rows='2' name='curri_target' placeholder='수강 대상을 입력하세요.' required='')=val.curri_target
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='edu_environment')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;강의환경
+              .col-xs-12
+                textarea#edu_environment.form-control(rows='2' name='edu_environment' placeholder='강의 환경을 입력하세요.' required='')=val.edu_environment
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              input#pre_course(type='hidden' value=val.pre_course)
+              label.col-xs-12(for='pre_course')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;선수 과정
+              each map in preCourseList
+                .col-md-3.col-sm-6
+                  .checkbox
+                    label(for='pre_course_'+map.comm_code)
+                      input(type='checkbox' name='pre_course' id='pre_course_'+map.comm_code value=map.comm_code) 
+                      span= map.comm_name
+              span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_info')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정 특징
+              .col-xs-12
+                textarea#curri_info.form-control(rows='20' name='curri_info' placeholder='과정 특징을 입력하세요.' required='')=val.curri_info
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='curri_desc')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;과정 주요 내용
+              .col-xs-12
+              .col-xs-12
+                textarea#curri_desc.form-control(rows='30' name='curri_desc' placeholder='과정 주요 내용을 입력하세요. 주제 앞에는 @를 붙여주세요.' required='')=val.curri_desc
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12
+                i.fa.fa-caret-square-o-right.text-success
+                | &nbsp;참고서적
+              .col-xs-12.filebox
+                input#ref_file.upload-name(readonly value= val.ref_file name='ref_file')
+                label(for='ref_file_name') 업로드
+                input#ref_file_name(type='file' name='ref_file_name')
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12
+                i.fa.fa-caret-square-o-right.text-success
+                | &nbsp;교재샘플
+              .col-xs-12.filebox
+                input#smp_file.upload-name(readonly value=val.smp_file name='smp_file')
+                label(for='smp_file_name') 업로드
+                input#smp_file_name(type='file' name='smp_file_name')
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              input#hidden_show_yn(type='hidden' value=val.show_yn)
+              label.col-xs-12
+                i.fa.fa-caret-square-o-right.text-success
+                | &nbsp;메인화면 보이기
+              .col-xs-12
+                .checkbox
+                  label(for='show_yn')
+                    input(type='checkbox' name='show_yn' id='show_yn' value=val.show_yn) 
+                    sapn 메인화면에 과정을 보이게 할 수 있습니다.
+              .col-xs-12
+                span.help-block
+          .row
+            .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+              .col-xs-6
+                button.btn.btn-outline-save.btn-lg.btn-block(type='submit') 저장
+              .col-xs-6
+                a.btn.btn-outline.btn-lg.btn-block(href='/curriculums', role='button') 취소
+  #snackbar= message                
+  script(type='text/javascript').
+    // 선수 과정 셋팅
+    var setCheckbox = function() {
+      var showYn = $('#hidden_show_yn').val();
+      var preCourse = $('#pre_course').val();
+      var arr = preCourse.split(',');
+      $.each(arr, function(index) {
+        $('#pre_course_'+arr[index]).prop('checked', true);
+      });
+      $('#show_yn').prop('checked', showYn == '1' ? true : false);
+    };
+    
+    // 파일 업로드 
+    var upload = function($upFile, inputName) {
+      var formData = new FormData();
+      formData.append("file", $upFile[0].files[0]);  
+      var result = null;
+      $.ajax({
+        url : "/uploadImage",
+        data : formData,
+        type : 'POST',
+        processData: false,
+        contentType: false,
+        success:function(data) {
+          if(data.result_code == "0001") {
+            var fileName = data.file_name;
+            $('#'+inputName).val(fileName);
+            if(inputName == "img_file")
+              $('#'+inputName+'_image').attr('src', '/resources/images/curriculums/'+fileName);
+            else
+              $('#'+inputName).val(fileName);  
+          } else {
+            alert(data.result_msg);
+          }
+        }
+      });
+    };
+    
+    // 결과 메시지 보여주기 
+    var resultMessage = function() {
+      if($('#snackbar').text() == "")
+        return;
+      $('#snackbar').addClass('show');
+      setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+    };
+    
+    $(function () {
+      // 선수 과정 셋팅
+      setCheckbox();
+      
+      // 새 과정 개설 시 기본 이미지 설정 
+      if($('#img_file').val() == "")
+        $('#img_file_image').attr('src', '/resources/images/curriculums/no_image.png');
+      
+      // 파일 업로드 
+      $('input[type=file]').bind('change', function(e) {
+        e.preventDefault();
+        var inputName = $(this).attr('id').replace('_name','');
+        var fileName = upload($(this), inputName);
+      });
+      
+      $('#show_yn').bind('change', function(event) {
+        var checked = $(this).is(':checked');
+        $(this).val(checked ? '1' : '0');
+      });
+            
+      // 결과 메시지 화면 출력
+      resultMessage();
+    });

@@ -1,0 +1,292 @@
+extends ../layouts/layout
+
+block content
+  .content.detail-course
+    .jumbotron
+      .container
+        .course-title.text-white.text-center
+          h4= val.curri_prefix
+          h1= val.curri_name
+        .course-button
+          .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+            if list
+              .col-xs-6
+                a#btn_apply.btn.btn-outline-inverse.btn-lg.btn-block(href='/courses/'+val.curri_id+'/apply' role='button') 수강신청
+              .col-xs-6
+                a#btn_book.btn.btn-outline.btn-lg.btn-block(href='/courses/'+val.curri_id+'/book' role='button') 찜예약
+            else
+              .col-xs-6.col-xs-offset-3
+                a#btn_book.btn.btn-outline.btn-lg.btn-block(href='/courses/'+val.curri_id+'/book' role='button') 찜예약
+    if list
+      .content.con-default
+        .container
+          .lecture-info
+            each map in list
+              ul
+                li
+                  span.title 기간
+                  span.content
+                    b= map.start_ymd+' - '+map.end_ymd
+                li
+                  span.title 강의시간
+                  span.content
+                    b= map.lec_type_name+' '+map.start_time2+' - '+map.end_time2+' (총 '+map.lec_hour+'시간)'
+                li
+                  span.title 강사
+                  span.content
+                    b= map.lecturer+' 강사님'
+                li
+                  span.title 수강료
+                  span.content
+                    b= map.tuition_fee/10000+'만원 (₩'+map.tuition_fee_con+')'
+                li
+                  span.title 환급금
+                  span.content
+                  if(map.individual_refund+map.large_com_refund+map.medium_com_refund+map.small_com_refund == 0)
+                    b 없음
+                  else
+                    b= '개인 : '+map.individual_refund+'원 / 중소기업 : '+map.large_com_refund+'원 / 중견기업 : '+map.medium_com_refund+'원 / 대기업 : '+map.small_com_refund+'원'  
+                li
+                  span.title 수업교재
+                  span.content
+                    b= map.textbook
+                li
+                  span.title 준비물
+                  span.content
+                    b= map.materials
+                li
+                  span.content.text-hightitle
+                    b= map.lec_comment
+  .content.con-white
+    .container.card-section
+      .intro
+        .page-header
+          h2 과정 소개
+          p=val.curri_intro
+        .row
+          .col-lg-4
+            .thumbnail
+              .process-info
+                .target
+                .caption.text-center
+                  h4.text-hightitle 수강대상
+                  p !{val.curri_target}
+          .col-lg-4
+            .thumbnail
+              .process-info
+                .pre-course
+                .caption.text-center
+                  h4.text-hightitle 선수과정
+                  p !{val.pre_course}
+          .col-lg-4
+            .thumbnail
+              .process-info
+                .environment
+                .caption.text-center
+                  h4.text-hightitle 강의환경
+                  p !{val.edu_environment}
+  .content.con-default
+    .container
+      .intro
+        .page-header
+          h2 과정 특징
+        .sub-section
+          p !{val.curri_info}
+  .content.con-white
+    .container
+      .curriculum
+        .page-header
+          h2 과정 주요 내용
+        ul
+         if val.sections
+            each s, idx in val.sections
+              li.sub-section
+                h5.text-hightitle='Section' + (idx + 1) + '. ' + s.title
+                ul
+                  - var contents = s.content
+                  - each c in contents
+                    li.sub-text=c
+         else
+          li.sub-section
+            p 과정 주요 내용이 없습니다.            
+  .content.con-default
+    if val.smp_file
+      .container
+        .textbook
+          .page-header
+            h2 교재 미리보기
+            a(href='/preview/'+val.curri_id, target='blank')
+              i.fa.fa-file
+              | &nbsp;
+              = val.curri_name+'.pdf'
+    if val.ref_file
+      .container
+        .reference
+          .page-header
+            h2 참고 서적
+            img(src='/resources/images/curriculums/'+val.ref_file)
+  .content.con-white
+    .container
+      .qna
+        .page-header
+          h2 과정 Q&A
+        form.form-horizontal(action='/courses/' + val.curri_id + '/write', method='post')
+          .row
+            .col-xs-12
+              textarea.form-control(rows='4' name='question' required='' placeholder='최초 글등록 후 24시간 이내 답변해 드립니다.')
+              br 
+          .row    
+            .col-xs-12  
+              button.btn.btn-primary(type='submit') 글쓰기  
+      .qna-list
+        if qnaList
+          each map in qnaList
+            .comment-question(id= 'question_'+map.board_id)
+              .row
+                .col-xs-7
+                  ul.writer-info
+                    li 
+                      h4
+                        i.fa.fa-user
+                    li
+                      h5(rol='reg_name')= map.reg_name
+                    li
+                      h6(rol='reg_ymd')= map.reg_ymd
+                .col-xs-5 
+                  if map.reg_user == user.id || user.priority == 'A'
+                    ul.button-right
+                      if !map.reply && user.priority == 'A'
+                        li(role='li_reply') 
+                          h5
+                            a.text-comment(href='javascript:bindAction("reply", "#question_'+map.board_id+'",'+map.curri_id+','+map.board_id+')')  답글
+                      li(role='li_question')
+                        h5
+                          a.text-comment(href='javascript:bindAction("modify", "#question_'+map.board_id+'",'+map.curri_id+','+map.board_id+')') 수정
+                      li(role='li_delete') 
+                        h5
+                          a.text-comment(href='javascript:bindAction("delete", "#question_'+map.board_id+'",'+map.curri_id+','+map.board_id+')')  삭제
+              .row
+                .col-xs-12        
+                  input(type='hidden', name='question' value=map.question)
+                  p(role='question') !{map.question}
+            if map.reply      
+              .comment-answer(id= 'answer_'+map.board_id)
+                .row
+                  .col-xs-12
+                    .line
+                .row                 
+                  .col-xs-1
+                    .clamp
+                  .col-xs-7
+                    ul.writer-info
+                      li 
+                        h4
+                          i.fa.fa-key
+                      li
+                        h5 
+                          관리자
+                      li
+                        h6(role='upd_ymd')= map.upd_ymd
+                  .col-xs-4 
+                    if user.priority == 'A'
+                      ul.button-right
+                        li(role='li_question') 
+                          h5 
+                            a.text-comment(href='javascript:bindAction("modify", "#answer_'+map.board_id+'",'+map.curri_id+','+map.board_id+')')  수정
+                        li(role='li_delete') 
+                          h5
+                            a.text-comment(href='javascript:bindAction("delete", "#answer_'+map.board_id+'",'+map.curri_id+','+map.board_id+')')  삭제
+                .row
+                  .col-xs-11.col-xs-offset-1        
+                    input(type='hidden', name='reply' value=map.reply)
+                    p(role='reply') !{map.reply}           
+        .comment-reply
+          .row
+            .col-xs-12
+              .line          
+          .row       
+            .col-xs-1
+              .clamp
+            .col-xs-11
+              form.form-horizontal(action='/courses/' + val.curri_id + '/modify', method='post')
+                .row
+                  .col-xs-12
+                    input(type='hidden' name='status' value='update')
+                    textarea.form-control(rows='4' name='reply' value=map.reply required='')
+                .row    
+                  .col-xs-12  
+                    button.btn.btn-primary(type='submit')  답글  
+  #snackbar= message                
+  script(type='text/javascript').
+    var $reply;
+    
+    // 답글쓰기 
+    var addItem  = function($selector, curriId, boardId) {
+      $reply.find('.col-xs-12 > div').addClass('line');
+      $reply.find('.col-xs-1 > div').addClass('clamp');
+      $('form', $reply).attr('action', '/courses/'+curriId+'/modify/'+boardId);
+      $('button', $reply).text('답글');
+      $('textarea', $reply).attr('name','reply').text('');
+      $reply.insertAfter($selector);
+    };
+    
+    // 수정하기 
+    var moveItem = function($selector, curriId, boardId) {
+      var $input = $('input', $selector);
+      $reply.find('.col-xs-12 > div').removeClass('line');
+      $reply.find('.col-xs-1 > div').removeClass('clamp');
+      $('form', $reply).attr('action', '/courses/'+curriId+'/modify/'+boardId);
+      $('button', $reply).text('수정');
+      $('textarea', $reply).attr('name',$input.attr('name')).text($input.val());
+      $reply.insertAfter($selector);
+    };
+    
+    // 삭제하기
+    var deleteItem = function($selector, curriId, boardId) {
+      var id = $selector.attr('id');
+      var arr = id.split('_');
+      
+      $.ajax({
+        url : '/courses/'+curriId+'/delete/'+boardId,
+        type: 'post',
+        dataType: 'json',
+        data: { question: 'question' == arr[0] ? '1' : '', reply: 'answer' == arr[0] ? '1' : ''},
+        success : function(data) {
+          if(data.result_code == "0001") {
+            if(arr[0] == 'question' && $('#answer_'+arr[1]) != undefined)
+              $('#answer_'+arr[1]).remove();
+            $selector.remove();
+            // 결과 메시지 보여주기 
+            $('#snackbar').text(data.result_msg);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+          }
+        }
+      });
+    };
+    
+    // 글쓰기 버튼 동작
+    var bindAction = function(flag, selectorId, curriId, boardId) {
+      if(flag == "delete") deleteItem($(selectorId), curriId, boardId);
+      else if(flag == "modify") moveItem($(selectorId), curriId, boardId);
+      else if(flag == "reply") addItem($(selectorId), curriId, boardId);
+    };  
+      
+    // 결과 메시지 보여주기 
+    var resultMessage = function() {
+      if($('#snackbar').text() == "")
+        return;
+      // 글쓰기 저장 후 바닥으로 스크롤 처리
+      var offset = $('#wrapper').height();
+      $('body,html').animate({scrollTop:offset}, 1000);
+        
+      $('#snackbar').addClass('show');
+      setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+    };  
+    
+    $(function () {  
+      $reply = $('.comment-reply').remove();
+
+      // 결과 메시지 화면 출력
+      resultMessage();
+    });            

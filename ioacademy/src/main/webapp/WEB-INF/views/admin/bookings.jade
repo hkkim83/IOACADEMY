@@ -1,0 +1,118 @@
+extends ../layouts/layout
+
+block content
+  .content
+    .container
+      .page-header
+        h2 수강예약관리
+      .row.curri-list
+        .col-md-offset-8.col-md-4
+          .input-group
+            .input-group-btn
+              button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
+                | 전체
+                span.caret
+              ul.dropdown-menu(role='menu')
+                li
+                  a(href='#') 전체
+                each val in curriculumList
+                  li
+                    a(href='#')= val.curri_name
+            input#search.form-control(type='text', placeholder='search', aria-label='Text input with dropdown button')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                i.fa.fa-search
+      .dataTable_wrapper
+        .table-responsive.table-container
+          table.table.table-striped.table-hover
+            thead
+              tr
+                th NO
+                th 과목명
+                th 이름
+                th 전화번호
+                th 등록일자
+                th 수강
+                th 취소
+            tbody
+              each val in list
+                tr(id=val.curri_id+'_'+val.id)
+                  td
+                  td= val.curri_name
+                  td= val.name+' ('+val.email+')'
+                  td= val.tel_no
+                  td= val.reg_ymd
+                  td= val.application_yn
+                  td
+                    a.text-danger(href='javascript:deleteItem('+val.curri_id+','+val.id+')') 취소
+  #snackbar
+  script(type='text/javascript').
+    var table;
+    
+    // 찜예약 취소 
+    var deleteItem = function(curriId, userId) {
+      var $tr = $('#'+curriId+'_'+userId);
+      $.ajax({
+        url : '/bookings/'+curriId,
+        data: {id: userId},
+        type: 'delete',
+        beforeSend: function() {
+          return confirm('수강예약을 취소하시겠습니까?');
+        },        
+        success : function(data) {
+          if(data.result_code == "0001") {
+            table.row($tr).remove().draw();          
+            $('#snackbar').text(data.result_msg);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+          }
+        }
+      });
+    };
+    
+    // 페이지 로드 시 
+    $(function () {
+      table = $('table').DataTable({
+        'pageLength': 25,
+        'lengthChange': false,
+        'columns': [
+          {'width': '5%'},
+          {'width': '*'},
+          {'width': '32%'},
+          {'width': '12%'},
+          {'width': '10%'},
+          {'width': '6%'},
+          {'width': '5%'}
+        ],
+        'columnDefs': [{
+          'searchable': false,
+          'orderable': false,
+          'targets': [0,6]
+        }],
+        'order': [[1, 'asc']]
+      });
+
+      // 기본 search box 삭제
+      $('#DataTables_Table_0_wrapper .row:eq(1)').addClass('min-table');
+      $('#DataTables_Table_0_wrapper .row:eq(0)').remove();
+
+      // 정렬에 따른 번호 매기기 
+      table.on('order.dt search.dt', function () {
+        table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+      }).draw();
+
+      // 조회
+      $('#search').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+            
+      // 과목조회 
+      $('.curri-list ul.dropdown-menu[role=menu] a').on('click', function(e) {
+        e.preventDefault();
+        var text = $(this).text();
+        text = text.replace(/[+]/gi,'\\+').replace(/[(]/gi,'\\(').replace(/[)]/gi,'\\)');
+        table.column(1).search( text == '전체' ? '' : '^'+text+'$', true, false ).draw();
+      });
+    });

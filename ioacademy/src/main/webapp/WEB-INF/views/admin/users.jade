@@ -1,0 +1,245 @@
+extends ../layouts/layout
+
+block content
+  .content
+    .container
+      .page-header
+        h2 회원정보관리
+      .row
+        .col-md-offset-8.col-md-4
+          .input-group
+            input#search.form-control(type='text', placeholder='search', aria-label='Text input with dropdown button')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                i.fa.fa-search
+      .dataTable_wrapper
+        .table-responsive.table-container
+          table.table.table-striped.table-hover
+            thead
+              tr
+                th NO
+                th 이름
+                th 이메일
+                th 전화번호
+                th 가입일자
+                th 수신거부
+                th 탈퇴
+            tbody
+              each val, index in list
+                tr(id= val.id)
+                  td
+                  td
+                    a.text-default(href='javascript:showModal("'+val.id+'")')
+                      span=val.name
+                      if val.comment
+                        span(role='comment') 
+                          i.fa.fa-comment
+                    input(type='hidden' name='email' value=val.email)
+                    input(type='hidden' name='name' value=val.name)
+                    input(type='hidden' name='tel_no1' value=val.tel_no1)
+                    input(type='hidden' name='tel_no2' value=val.tel_no2)
+                    input(type='hidden' name='tel_no3' value=val.tel_no3)
+                    input(type='hidden' name='comment' value=val.comment)
+                  td=val.email
+                  td(role='tel_no')=val.tel_no
+                  td=val.join_ymd
+                  td
+                    input(type='checkbox', checked= (val.email_yn == '1'))
+                  td
+                    a.text-danger(href='javascript:deleteItem('+val.id+')')  탈퇴
+  #modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4.modal-title 회원 정보 수정
+        .modal-body
+          form.form-horizontal
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='email') 이메일
+              .col-md-9.col-sm-9.col-xs-12
+                p#email.form-control-static
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='name') 이름
+              .col-md-9.col-sm-9.col-xs-12
+                p#name.form-control-static
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='tel_no1') 전화번호
+              .col-sm-9
+                .row
+                  .col-sm-3.col-xs-4
+                    select#tel_no1.form-control(name='tel_no1')
+                      - var options = ['010', '011', '016', '017', '018', '019'];
+                      each opt in options
+                        option(value= opt)= opt
+                  .col-sm-3.col-xs-4
+                    label.sr-only(for='tel_no2') -
+                    input#tel_no2.form-control(type='text' name='tel_no2' required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요.")
+                  .col-sm-3.col-xs-4
+                    label.sr-only(for='tel_no3') -
+                    input#tel_no3.form-control(type='text' name='tel_no3' required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요.")
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='comment') 메모
+              .col-md-8.col-sm-8.col-xs-12
+                textarea(rows=5)#comment.form-control
+        .modal-footer
+          button#btn_save.btn.btn-primary(type='button') 저장
+          button.btn.btn-default(type='button', data-dismiss='modal') 닫기
+  #snackbar
+  script(type='text/javascript').
+    var table;
+    
+    // 팝업 저장 시 
+    var save = function() {
+      var id = $('#modal form').attr('role');
+      var obj = new Object();
+      obj.tel_no1 = $('#tel_no1').val();
+      obj.tel_no2 = $('#tel_no2').val();
+      obj.tel_no3 = $('#tel_no3').val();
+      obj.comment = $('#comment').val();
+      
+      $.ajax({
+        url : '/users/'+id,
+        data: obj,
+        type: 'post',
+        beforeSend: function() {
+          return confirm('저장 하시겠습니까?');
+        },        
+        success : function(data) {
+          if(data.result_code == "0001") {     
+            var $tr = $('#'+id);
+            $.each(obj, function(key, value) {
+              $('input[name='+key+']', $tr).val(value);
+            });
+            
+            if(obj.comment != "") {
+              $('a.text-default', $tr).append('<span role="comment"><i class="fa fa-comment"></span>');
+            } else {
+              if($('span[role=comment]', $tr))
+                $('span[role=comment]', $tr).remove();
+            }
+            
+            if(obj.tel_no1 != "")
+              $('td[role=tel_no]', $tr).text(obj.tel_no1);
+            if(obj.tel_no2 != "")
+              $('td[role=tel_no]', $tr).text($('td[role=tel_no]', $tr).text()+'-'+obj.tel_no2);
+            if(obj.tel_no3 != "")
+              $('td[role=tel_no]', $tr).text($('td[role=tel_no]', $tr).text()+'-'+obj.tel_no3);
+              
+            $('#modal').modal('toggle');
+          }
+          $('#snackbar').text(data.result_msg);
+          $('#snackbar').addClass('show');
+          setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+        }
+      });      
+    };
+    
+    // 팝업띄우기
+    var showModal = function(id) {
+      var $tr = $('#'+id);
+      $('#modal form').attr('role', id);
+      $('input[type=hidden]', $tr).each(function(index) {
+        var key = $(this).attr('name');
+        var value = $(this).val();
+        var $selector = $('#'+key);
+        if ($selector != undefined) {
+          if ($selector.prop('tagName') == "INPUT") {
+            $selector.val(value);
+          } else if ($selector.prop('tagName') == "SELECT") {
+            $selector.val(value);
+          } else {
+            $selector.text(value);
+          }
+        }
+      });
+      $('#modal').modal();
+    };
+    
+    // 강제 탈퇴 
+    var deleteItem = function(userId) {
+      var $tr = $('#'+userId);
+      $.ajax({
+        url : '/users/'+userId,
+        type: 'delete',
+        beforeSend: function() {
+          return confirm('강제 탈퇴시키겠습니까?');
+        },        
+        success : function(data) {
+          if(data.result_code == "0001") {
+            table.row($tr).remove().draw();
+          }
+          $('#snackbar').text(data.result_msg);
+          $('#snackbar').addClass('show');
+          setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+        }
+      });
+    };
+    
+    // 수신거부여부 저장 
+    var saveItem = function(cuserId, emailYn) {
+      $.ajax({
+        url : '/users/'+userId,
+        data: {payment_yn: paymentYn == true ? '1' : '0'},
+        type: 'put',     
+        success : function(data) {
+          if(data.result_code != "0001") {
+            $('#snackbar').text(data.result_msg);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+          }
+        }
+      });
+    };
+    
+    // 페이지 로드 시 
+    $(function() {
+      table = $('table').DataTable({
+        'pageLength' : 25,
+        'lengthChange': false,
+        'columnDefs': [{
+          'searchable': false,
+          'orderable': false,
+          'targets': [0,5,6]
+        }],
+        'columns': [
+          {'width': '5%'},
+          {'width': '20%'},
+          {'width': '*'},
+          {'width': '15%'},
+          {'width': '12%'},
+          {'width': '7%'},
+          {'width': '5%'}
+        ],
+        'order': [[ 1, 'asc' ]]
+      });
+
+      // 기본 search box 삭제
+      $('#DataTables_Table_0_wrapper .row:eq(1)').addClass('min-table');
+      $('#DataTables_Table_0_wrapper .row:eq(0)').remove();
+      
+      // 정렬에 따른 번호 매기기 
+      table.on('order.dt search.dt', function () {
+        table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+      }).draw();
+
+      // 수신거부여부 저장
+      $('input[type=checkbox]').on('change', function() {
+          var id = $(this).parent().parent().attr('id');
+          var arr = id.split('_');
+          saveItem(arr[0], arr[1], arr[2], $(this).prop('checked'));
+      });
+      
+      // 조회
+      $('#search').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+            
+      // 저장
+      $('#btn_save').on('click', function() {
+        save();
+      });
+    });

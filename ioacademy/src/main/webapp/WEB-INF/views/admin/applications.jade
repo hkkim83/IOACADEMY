@@ -1,0 +1,272 @@
+extends ../layouts/layout
+
+block content
+  .content
+    .container
+      .page-header
+        h2 수강신청관리
+      .row.curri-list
+        .col-md-offset-8.col-md-4
+          .input-group
+            .input-group-btn
+              button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
+                | 전체
+                span.caret
+              ul.dropdown-menu(role='menu')
+                li
+                  a(href='#') 전체
+                each val in curriculumList
+                  li
+                    a(href='#')= val.curri_name
+            input#search.form-control(type='text', placeholder='search', aria-label='Text input with dropdown button')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                i.fa.fa-search
+      .dataTable_wrapper
+        .table-responsive.table-container
+          table.table.table-striped.table-hover
+            thead
+              tr
+                th NO
+                th 과목명
+                th 개강일자
+                th 이름
+                th 전화번호
+                th 지원구분
+                th 지원일자
+                th 서류
+                th 입금
+                th 취소
+            tbody
+              each val in list
+                tr(id= val.curri_id+'_'+val.lec_id+'_'+val.id)
+                  td
+                  td= val.curri_name
+                  td= val.start_ymd
+                  td
+                    a.text-default(href='javascript:showModal("'+val.curri_id+'_'+val.lec_id+'_'+val.id+'")')
+                      span=val.name
+                      if val.comment
+                        span(role='comment') 
+                          i.fa.fa-comment
+                    input(type='hidden' name='curri_name' value=val.curri_name)
+                    input(type='hidden' name='name' value=val.name)
+                    input(type='hidden' name='payment_type' value=val.payment_type)
+                    input(type='hidden' name='payment_amt' value=val.payment_amt)
+                    input(type='hidden' name='tuition_fee_con' value=val.tuition_fee_con)
+                    input(type='hidden' name='comment' value=val.comment)
+                  td= val.tel_no
+                  td= val.application_type_name
+                  td= val.application_ymd
+                  td
+                    if val.file_name
+                      a(href='/download?file_path='+val.file_path+'&file_name='+val.file_name)
+                        i.fa.fa-file
+                  td
+                    input(type='checkbox' checked= (val.payment_yn == '1'))
+                  td
+                    a.text-danger(href='javascript:deleteItem('+val.curri_id+','+val.lec_id+','+val.id+')') 취소
+  #modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4.modal-title 수강 정보 수정
+        .modal-body
+          form.form-horizontal
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='curri_name') 과목명
+              .col-md-9.col-sm-9.col-xs-12
+                p#curri_name.form-control-static              
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='name') 이름
+              .col-md-9.col-sm-9.col-xs-12
+                p#name.form-control-static
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='payment_type') 결제방법
+              .col-sm-9.col-xs-12
+                .row
+                  .col-xs-4
+                    select#payment_type.form-control(name='payment_type')
+                      each map in codeList
+                        option(value= map.comm_code)= map.comm_name
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='payment_amt') 결제금액
+              .col-sm-9
+                .row
+                  .col-xs-4
+                    input#payment_amt.form-control(type='text' name='payment_amt' pattern="[0-9]+" title="숫자만 입력해주세요.")
+                  .col-xs-4
+                    label.sr-only(for='tuition_fee')
+                    p#tuition_fee_con.form-control-static  
+            .form-group.form-group-lg
+              lable.col-md-3.col-sm-3.col-xs-12.control-label(for='comment') 메모
+              .col-md-8.col-sm-8.col-xs-12
+                textarea(rows=5)#comment.form-control
+        .modal-footer
+          button#btn_save.btn.btn-primary(type='button') 저장
+          button.btn.btn-default(type='button', data-dismiss='modal') 닫기
+  #snackbar
+  script(type='text/javascript').
+    var table;
+    
+    // 팝업 저장 시 
+    var save = function() {
+      var trId = $('#modal form').attr('role');
+      var arr = trId.split('_');
+      var obj = new Object();
+      obj.id = arr[2];
+      obj.payment_type = $('#payment_type').val();
+      obj.payment_amt = $('#payment_amt').val();
+      obj.comment = $('#comment').val();
+      
+      $.ajax({
+        url : '/applications/'+arr[0]+'/'+arr[1],
+        data: obj,
+        type: 'post',
+        beforeSend: function() {
+          return confirm('저장 하시겠습니까?');
+        },        
+        success : function(data) {
+          if(data.result_code == "0001") {   
+            var $tr = $('#'+trId);
+            $.each(obj, function(key, value) {
+              $('input[name='+key+']', $tr).val(value);
+            });
+            
+            if(obj.comment != "") {
+              $('a.text-default', $tr).append('<span role="comment"><i class="fa fa-comment"></span>');
+            } else {
+              if($('span[role=comment]', $tr))
+                $('span[role=comment]', $tr).remove();
+            }
+            
+            $('#modal').modal('toggle');
+          }
+          $('#snackbar').text(data.result_msg);
+          $('#snackbar').addClass('show');
+          setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+        }
+      });      
+    };
+    
+    // 팝업띄우기 
+    var showModal = function(id) {
+      var $tr = $('#'+id);
+      $('#modal form').attr('role', id);
+      $('input[type=hidden]', $tr).each(function(index) {
+        var key = $(this).attr('name');
+        var value = $(this).val();
+        var $selector = $('#'+key);
+        if ($selector != undefined) {
+          if ($selector.prop('tagName') == "INPUT") {
+            $selector.val(value);
+          } else if ($selector.prop('tagName') == "SELECT") {
+            $selector.val(value);
+          } else {
+            $selector.text(value);
+          }
+        }
+      });
+      $('#modal').modal();
+    };
+    
+    // 수강 취소
+    var deleteItem = function(curriId, lecId, userId) {
+      var $tr = $('#' + curriId+'_'+lecId+'_'+userId);
+      $.ajax({
+        url : '/applications/'+curriId+'/'+lecId,
+        data: {id: userId},
+        type: 'delete',
+        beforeSend: function() {
+          return confirm('수강신청을 취소하시겠습니까?');
+        },        
+        success : function(data) {
+          if(data.result_code == "0001") {
+            table.row($tr).remove().draw();          
+            $('#snackbar').text(data.result_msg);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+          }
+        }
+      });
+    };
+    
+    // 입금여부 저장 
+    var saveItem = function(curriId, lecId, userId, paymentYn) {
+      $.ajax({
+        url : '/applications/'+curriId+'/'+lecId,
+        data: {id: userId, payment_yn: paymentYn == true ? '1' : '0'},
+        type: 'put',     
+        success : function(data) {
+          if(data.result_code != "0001") {
+            $('#snackbar').text(data.result_msg);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+          }
+        }
+      });
+    };
+    
+    // 페이지 로드 시 
+    $(function () {
+      table = $('table').DataTable({
+        'pageLength': 25,
+        'lengthChange': false,
+        'columns': [
+          {'width': '5%'},
+          {'width': '*'},
+          {'width': '10%'},
+          {'width': '14%'},
+          {'width': '12%'},
+          {'width': '10%'},
+          {'width': '10%'},
+          {'width': '5%'},
+          {'width': '5%'},
+          {'width': '5%'}
+        ],
+        'columnDefs': [{
+          'searchable': false,
+          'orderable': false,
+          'targets': [0,7,8,9]
+        }],
+        'order': [[2, 'desc']]
+      });
+
+      // 기본 search box 삭제
+      $('#DataTables_Table_0_wrapper .row:eq(1)').addClass('min-table');
+      $('#DataTables_Table_0_wrapper .row:eq(0)').remove();
+
+      // 정렬에 따른 번호 매기기 
+      table.on('order.dt search.dt', function () {
+        table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+      }).draw();
+      
+      // 입금여부 저장
+      $('input[type=checkbox]').on('change', function() {
+          var id = $(this).parent().parent().attr('id');
+          var arr = id.split('_');
+          saveItem(arr[0], arr[1], arr[2], $(this).prop('checked'));
+      });
+      
+      // 조회
+      $('#search').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+      
+      // 저장
+      $('#btn_save').on('click', function() {
+        save();
+      });
+      
+      // 과목조회 
+      $('.curri-list ul.dropdown-menu[role=menu] a').on('click', function(e) {
+        e.preventDefault();
+        var text = $(this).text();
+        text = text.replace(/[+]/gi,'\\+').replace(/[(]/gi,'\\(').replace(/[)]/gi,'\\)');
+        table.column(1).search( text == '전체' ? '' : '^'+text+'$', true, false ).draw();
+      });
+    });

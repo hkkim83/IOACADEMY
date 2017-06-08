@@ -1,0 +1,98 @@
+extends ../layouts/layout
+
+block content
+  .content.con-white
+    .sm-container.application
+      .page-header
+        h2.text-primary= val.curri_name
+        p.text-danger= error_message
+      hr
+      form.form-horizontal(action='/courses/' + val.curri_id + '/apply', method='post')
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='curri_date') 강의일정
+          .col-sm-10.col-xs-12
+            p#curri_date.form-control-static= val.start_ymd+'-'+val.end_ymd+' ( 총 '+val.lec_hour+'시간 )'
+            span.help-block
+            input#lec_id(type='hidden' name='lec_id' value=val.lec_id)
+            input#error_message(type='hidden' value=error_message)
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='tuition_fee') 수강료
+          .col-sm-10.col-xs-12
+            p#tuition_fee.form-control-static= val.tuition_fee/10000+'만원 (₩'+val.tuition_fee_con+')'
+            span.help-block
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='curri_date') 지원구분
+          .col-sm-10
+            .col-sm-6.col-xs-12
+              select#application_type.form-control(name='application_type')
+                each map in appList
+                  option(value= map.comm_code)= map.comm_name
+              span.help-block
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='email') 이메일
+          .col-sm-10.col-xs-12
+            p#email.form-control-static= user.email
+            span.help-block
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='name') 성명
+          .col-sm-10.col-xs-12
+            p#name.form-control-static= user.name
+            span.help-block
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='tel_no1') 전화번호
+          .col-md-10
+            .col-sm-3.col-xs-4
+              select#tel_no1.form-control(name='tel_no1')
+                - var options = ['010', '011', '016', '017', '018', '019'];
+                each opt in options
+                  option(value= opt, selected= (user.tel_no1 == opt))= opt
+            .col-sm-3.col-xs-4
+              label.sr-only(for='tel_no2') -
+              input#tel_no2.form-control(type='text' name='tel_no2' value= user.tel_no2 required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요.")
+            .col-sm-3.col-xs-4
+              label.sr-only(for='tel_no3') -
+              input#tel_no3.form-control(type='text' name='tel_no3' value= user.tel_no3 required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요.")
+        .form-group.form-group-lg
+          label.col-sm-2.col-xs-12.control-label(for='file_down') 환급서류
+          .col-sm-10.col-xs-12
+            p#file_down.form-control-static
+              a(href="/download?file_name=io_document.zip")
+                i.fa.fa-download(aria-hidden='true')
+            p.form-control-static
+              small 근로자 수강지원제도를 이용한 지원자는 환급서류를 다운로드 받은 후 마이페이지 수강내역 탭에서 작성한 파일을 업로드해 주세요. 단, 첨부파일은 최종 1건만 반영됩니다. 
+        hr
+        h4.text-hightitle 결제방법
+        ul
+          li
+            span.text-highlight - 계좌이체
+            br
+            | &nbsp;&nbsp;국민은행을 통해서 계좌이체 할 수 있습니다.
+            ul
+              li
+                b 예금주 : &nbsp;
+                | (주)아임구루
+              li
+                b 국민은행 : &nbsp;
+                | 993101-01-171695
+          li
+            span.text-highlight - 카드결제
+            br
+            | &nbsp;&nbsp;카드 결제는 교육센터에 직접 방문해야 합니다.
+        br
+        br
+        .form-group.form-group-lg
+          .row
+            .col-md-6.col-md-offset-3
+              .col-xs-6
+                button.btn.btn-lg.btn-outline-save.btn-block(type='submit') 수강신청
+              .col-xs-6
+                a.btn.btn-outline.btn-lg.btn-block(href='/courses/' + val.curri_id, role='button') 돌아가기
+  #snackbar= message                
+
+  script(type='text/javascript').   
+    $(function () {
+      if($('#snackbar').text() == "")
+        return;
+      $('#snackbar').addClass('show');
+      setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+    });                            

@@ -1,0 +1,10 @@
+doctype html
+html(lang='ko')
+  include ../includes/header.jade
+  body(style='overflow:hidden; padding-top:0')
+    object(type='application/pdf', data=data, width='100%')    
+  script(type='text/javascript').
+    // 페이지 로드 시 
+    $(function () {
+      $('object').height($(document).height());
+    });

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.lectures">
+  <!-- 강좌 목록 조회 -->
+  <select id="selectList" resultType="HashMap" parameterType="java.lang.String" >
+    <![CDATA[
+      select le.curri_id
+           , le.lec_id
+           , cu.curri_name
+           , le.lec_kind
+           , c1.lec_kind_name
+           , le.lec_type
+           , c2.lec_type_name
+           , le.start_date
+           , date_format(le.start_date, '%Y.%m.%d') start_ymd
+           , le.end_date
+           , date_format(le.end_date, '%Y.%m.%d') end_ymd
+           , le.start_time
+           , concat(substring(le.start_time,1,2),':',substring(le.start_time,3,2)) start_time2
+           , le.end_time
+           , concat(substring(le.end_time,1,2),':',substring(le.end_time,3,2)) end_time2
+           , le.application_type
+           , ifnull(le.textbook,'자체제작') 	textbook
+           , le.tuition_fee
+           , format(le.tuition_fee,0)     tuition_fee_con
+           , le.individual_refund
+           , le.large_com_refund
+           , le.medium_com_refund
+           , le.small_com_refund
+           , ifnull(le.lecturer,'담당강사') 	lecturer
+           , ifnull(le.lec_hour,'')			  lec_hour
+           , ifnull(le.materials, '간단한 필기도구') materials
+           , ifnull(le.lec_comment,'')		lec_comment
+           , le.lec_status
+           , c3.lec_status_name
+           , ( select count(*) from application 
+                where curri_id = le.curri_id 
+                  and lec_id = le.lec_id ) application_cnt
+        from curriculum cu
+        join lecture le on le.curri_id   = cu.curri_id
+        left join 
+             ( select comm_code, comm_name as lec_kind_name
+                 from common
+                where group_code = '012'
+             ) c1 on le.lec_kind = c1.comm_code
+        left join 
+             ( select comm_code, comm_name as lec_type_name
+                 from common
+                where group_code = '013'
+             ) c2 on le.lec_type = c2.comm_code                       
+        left join 
+             ( select comm_code, comm_name as lec_status_name
+                 from common
+                where group_code = '014'
+             ) c3 on le.lec_status = c3.comm_code
+       where le.del_yn     = '0'
+         and cu.del_yn     = '0'
+         and le.lec_kind   = '01'
+    ]]>
+    <if test="curri_id != null"><![CDATA[
+         and le.curri_id    = #{curri_id}
+    ]]></if>          
+    <if test="lec_id != null"><![CDATA[
+         and le.lec_id      = #{lec_id}
+    ]]></if>          
+    <if test="start_date != null"><![CDATA[
+         and le.start_date  like concat('%',#{start_date},'%')
+    ]]></if>   
+    <if test="lec_flag == 1"><![CDATA[
+         and le.lec_status in ( '01', '02' )    
+    ]]></if>   
+    <if test="lec_flag == 2"><![CDATA[
+         and le.lec_status in ( '01', '02', '03' )    
+    ]]></if>    
+    <if test="lec_kind != null and !lec_kind.equals('')"><![CDATA[
+         and le.lec_kind    = #{lec_kind}
+    ]]></if>      
+    <if test="lec_type != null and !lec_type.equals('')"><![CDATA[
+         and le.lec_type    = #{lec_type}
+    ]]></if>     
+    <if test="keyword != null and !keyword.equals('')"><![CDATA[
+         and (
+                 cu.curri_name like concat('%',#{keyword},'%')
+              or le.lecturer   like concat('%',#{keyword},'%')
+              or le.start_date like concat('%',#{keyword},'%')
+             )
+    ]]></if>
+    <if test="lec_flag == 1"><![CDATA[
+       order by le.start_date
+    ]]></if>   
+    <if test="lec_flag == 2"><![CDATA[
+       order by le.start_date desc    
+    ]]></if>       
+  </select>
+
+  <!-- 강좌 조회 -->
+  <select id="select" resultType="HashMap" parameterType="java.lang.String" >
+    <if test="lec_id == null or lec_id.equals('')"><![CDATA[
+      select cu.curri_id         curri_id
+           , ''                  lec_id
+           , cu.curri_name       curri_name
+           , c1.curri_kind_name  curri_kind_name
+           , '01'                lec_kind
+           , '09'                lec_type
+           , ''                  start_date
+           , ''                  end_date
+           , '0900'              start_time
+           , '1800'              end_time
+           , ''                  application_type
+           , '자체제작'         	   textbook
+           , '550000' 			     tuition_fee
+           , '0'                 individual_refund
+           , '0'                 large_com_refund
+           , '0'                 medium_com_refund
+           , '0'                 small_com_refund
+           , ''                  lecturer
+           , '40'                lec_hour
+           , '간단한 필기도구'       materials
+           , ''                  lec_comment
+           , '01'                lec_status
+        from curriculum cu
+        left join 
+             ( select comm_code, comm_name as curri_kind_name
+                 from common
+                where group_code = '002'
+             ) c1 on cu.curri_kind = c1.comm_code
+       where cu.del_yn     = '0' 
+         and cu.curri_id   = #{curri_id}
+    ]]></if>          
+    <if test="lec_id != null and !lec_id.equals('')"><![CDATA[
+      select cu.curri_id
+           , le.lec_id
+           , cu.curri_name
+           , c1.curri_kind_name
+           , ifnull(le.lec_kind,'01')               lec_kind
+           , ifnull(le.lec_type,'01')               lec_type
+           , ifnull(le.start_date,'')               start_date
+           , ifnull(le.end_date,'')                 end_date
+           , ifnull(le.start_time,'0900')           start_time
+           , ifnull(le.end_time,'1800')             end_time
+           , ifnull(le.application_type,'')         application_type
+           , ifnull(le.textbook, '자체제작')       	  textbook
+           , ifnull(le.tuition_fee, '550000') 		  tuition_fee
+           , ifnull(le.individual_refund, '0')      individual_refund
+           , ifnull(le.large_com_refund, '0')       large_com_refund
+           , ifnull(le.medium_com_refund, '0')      medium_com_refund
+           , ifnull(le.small_com_refund, '0')       small_com_refund
+           , ifnull(le.lecturer,'')                 lecturer
+           , ifnull(le.lec_hour,'40')               lec_hour
+           , ifnull(le.materials, '간단한 필기도구')    materials
+           , ifnull(le.lec_comment,'')              lec_comment
+           , ifnull(le.lec_status,'01')             lec_status
+        from curriculum cu
+        join lecture le on cu.curri_id = le.curri_id and le.del_yn = '0'
+        join ( select comm_code, comm_name as curri_kind_name
+                 from common
+                where group_code = '002'
+             ) c1 on cu.curri_kind = c1.comm_code
+       where cu.del_yn     = '0'
+         and cu.curri_id   = #{curri_id}
+         and le.lec_id     = #{lec_id}
+    ]]></if>
+  </select>
+  
+  <!-- 강좌 등록 -->
+  <insert id="insert" parameterType="HashMap" >
+    <selectKey keyProperty="lec_id" resultType="String" order="BEFORE">
+      <![CDATA[
+        select ifnull(max(lec_id),0)+1 
+          from lecture where curri_id = #{curri_id}
+      ]]>   
+    </selectKey>    
+    <![CDATA[
+      insert into lecture
+           ( curri_id
+           , lec_id
+           , lec_kind
+           , lec_type
+           , start_date
+           , end_date
+           , start_time
+           , end_time
+           , application_type
+           , textbook
+           , tuition_fee
+           , individual_refund
+           , large_com_refund
+           , medium_com_refund
+           , small_com_refund
+           , lecturer
+           , lec_hour
+           , materials
+           , lec_comment
+           , lec_status
+           , del_yn
+           , reg_user
+           , reg_date
+           , upd_user
+           , upd_date )
+      values 
+           ( #{curri_id} 
+           , #{lec_id}          
+           , #{lec_kind}
+           , #{lec_type}
+           , #{start_date}
+           , #{end_date}
+           , #{start_time}
+           , #{end_time}
+           , #{application_type}
+           , #{textbook}
+           , #{tuition_fee}
+           , #{individual_refund}
+           , #{large_com_refund}
+           , #{medium_com_refund}
+           , #{small_com_refund}
+           , #{lecturer}
+           , #{lec_hour}
+           , #{materials}
+           , #{lec_comment}
+           , '01'
+           , '0'
+           , #{login_id}
+           , now()
+           , #{login_id}
+           , now() )
+    ]]>   
+  </insert>
+  
+  <!-- 강좌 수정 -->
+  <update id="update" parameterType="HashMap" >
+    <![CDATA[
+      update lecture
+         set upd_user          = #{login_id}
+           , upd_date          = now()
+    ]]>
+    <if test="lec_status != null"><![CDATA[    
+           , lec_status        = #{lec_status}
+    ]]></if>
+    <if test="lec_status == null"><![CDATA[              
+           , lec_kind          = #{lec_kind}
+           , lec_type          = #{lec_type}
+           , start_date        = #{start_date}
+           , end_date          = #{end_date}
+           , start_time        = #{start_time}
+           , end_time          = #{end_time}
+           , application_type  = #{application_type}
+           , textbook          = #{textbook}
+           , tuition_fee       = #{tuition_fee}
+           , individual_refund = #{individual_refund}
+           , large_com_refund  = #{large_com_refund}
+           , medium_com_refund = #{medium_com_refund}
+           , small_com_refund  = #{small_com_refund}
+           , lecturer          = #{lecturer}
+           , lec_hour          = #{lec_hour}
+           , materials         = #{materials}
+           , lec_comment       = #{lec_comment}
+    ]]></if> 
+    <![CDATA[ 
+       where curri_id          = #{curri_id}
+         and lec_id            = #{lec_id}
+    ]]>
+  </update>
+  
+    
+  <!-- 강좌 삭제 -->
+  <delete id="delete" parameterType="HashMap" >
+    <![CDATA[
+      update lecture
+         set del_yn   = '1'
+       where curri_id         = #{curri_id}
+         and lec_id           = #{lec_id}
+    ]]>
+  </delete>
+  
+</mapper>

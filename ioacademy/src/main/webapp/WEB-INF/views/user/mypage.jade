@@ -1,0 +1,219 @@
+extends ../layouts/layout
+
+block content
+  .content.con-white(data-spy='scroll').min-content
+    .container
+      ul.nav.nav-pills.mypage-collapse
+        li.active
+          a(href='#myinfo', data-toggle='tab') 내정보
+        li
+          a(href='#applicants', data-toggle='tab') 수강내역
+        li
+          a(href='#bookings', data-toggle='tab') 찜내역
+      .tab-content
+        #myinfo.tab-pane.active
+          .col-md-6
+            .title
+              h3 내정보
+            .mypage-content
+              form.form-horizontal(action='/mypage' method='post')
+                .form-group.form-group-lg
+                  lable.col-md-3.col-sm-3.col-xs-12.control-label(for='email') 이메일
+                  .col-md-9.col-sm-9.col-xs-12
+                    p#email.form-control-static= user.email
+                    .checkbox
+                      label
+                        input#email_yn(type='checkbox' name='email_yn' checked=(user.email_yn == '1'))
+                        |  이메일 수신거부
+                    span.help-block
+                .form-group.form-group-lg
+                  lable.col-md-3.col-sm-3.col-xs-12.control-label(for='name') 성명
+                  .col-md-6.col-sm-6.col-xs-12
+                    input#name.form-control(type='text' name='name' placeholder='name' value= user.name required='')
+                    span.help-block.with-errors
+                .form-group.form-group-lg
+                  lable.col-md-3.col-sm-3.col-xs-12.control-label(for='tel_no1') 전화번호
+                  .col-sm-9.col-xs-12
+                    .row
+                      .col-xs-4
+                        select#tel_no1.form-control(name='tel_no1')
+                          - var options = ['010', '011', '016', '017', '018', '019'];
+                          each opt in options
+                            option(value= opt, selected= (user.tel_no1 == opt))= opt
+                      .col-xs-4
+                        label.sr-only(for='tel_no2') -
+                        input#tel_no2.form-control(type='text' name='tel_no2' required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요." value= user.tel_no2)
+                      .col-xs-4
+                        label.sr-only(for='tel_no3') -
+                        input#tel_no3.form-control(type='text' name='tel_no3' required='' maxlength=4 pattern="[0-9]+" title="숫자만 입력해주세요." value= user.tel_no3)
+                  span.help-block.with-errors
+                .form-group.form-group-lg
+                  .text-center
+                    button.btn.btn-primary.btn-lg(type='submit') 저장하기
+          .col-md-6
+            .title
+              h3 비밀번호 변경
+            .mypage-content.password
+              form.form-horizontal(action='/mypage/update' method='post')
+                .form-group.form-group-lg
+                  lable.col-md-4.col-sm-4.col-xs-12.control-label(for='cur_password') 현재 비밀번호
+                  .col-md-7.col-sm-7.col-xs-12
+                    input#cur_password.form-control.input-lg(type='password' placeholder='current password' name='cur_password' required='')
+                    span.help-block.text-danger= cur_message
+                .form-group.form-group-lg
+                  lable.col-md-4.col-sm-4.col-xs-12.control-label(for='password') 새 비밀번호
+                  .col-md-7.col-sm-7.col-xs-12
+                    input#password.form-control.input-lg(type='password' placeholder='new password' name='password' required='')
+                    span.help-block.text-danger= new_message
+                .form-group.form-group-lg
+                  lable.col-md-4.col-sm-4.col-xs-12.control-label(for='re_password') 새 비밀번호 확인
+                  .col-md-7.col-sm-7.col-xs-12
+                    input#re_password.form-control.input-lg(type='password' placeholder='confirm password' name='re_password' required='' data-match='#password' data-match-error='새 비밀번호와 같지 않습니다.')
+                    span.help-block.text-danger= re_message
+                .form-group.form-group-lg
+                  .text-center
+                    button#btn_change.btn.btn-primary.btn-lg(type='submit') 변경하기
+          .col-md-12
+            .title
+              h3 회원탈퇴
+            .mypage-content
+              .row.text-center
+                p 정말로 회원을 탈퇴하겠습니까?
+                form#form_exit.form-horizontal(action='/mypage/delete', method='post')
+                  button#btn_exit.btn.btn-default.btn-lg(type='button') 회원을 탈퇴합니다.
+        #applicants.tab-pane
+          .container.card-section
+            if applicationList  
+              each val in applicationList
+                .application-info(id='application_'+val.curri_id)
+                  .col-lg-3.col-md-4.col-xs-12
+                    .course-info
+                      .caption-content
+                        p= val.short_name
+                      .thumbnail
+                        img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+                        .caption
+                          .row
+                            .col-xs-4
+                              p.application_title 수강일자
+                            .col-xs-8
+                              p.application_text= val.start_ymd+'-'+val.end_ymd
+                          .row
+                            .col-xs-4
+                              p.application_title 지원구분
+                            .col-xs-8
+                              p.application_text= val.application_type_name
+                          .row
+                            .col-xs-4
+                              p.application_title 환급서류
+                            .col-xs-8
+                              .filebox2
+                                input#curri_id(type='hidden' value=val.curri_id name='curri_id')
+                                input#lec_id(type='hidden' value=val.lec_id name='lec_id')
+                                label(for='file_name') 
+                                  i.fa.fa-upload(aria-hidden='true')
+                                input#file_name(type='file' name='file_name')
+                        .status
+                          img(src='/resources/images/status_'+val.application_status+'.png')      
+                        .button.text-center
+                          if val.application_status == '01' || val.application_status == '02'
+                            a(href='javascript:cancel("apply", "#application_'+val.curri_id+'",'+val.curri_id+','+val.lec_id+')') 수강취소 
+                          else
+                            p 수강취소
+                          
+            else
+              p 수강 내역이 존재하지 않습니다.
+                      
+        #bookings.tab-pane
+          .container.card-section
+            if bookingList  
+              each val in bookingList
+                .booking-info(id='booking_'+val.curri_id)
+                  .col-lg-3.col-md-4.col-xs-12
+                    .course-info
+                      .caption-content
+                        p= val.short_name
+                      .thumbnail
+                        img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+                        .button.text-center
+                          a(href='javascript:cancel("book", "#booking_'+val.curri_id+'",'+val.curri_id+', 0)') 찜취소
+            else
+              p 찜 내역이 존재하지 않습니다.
+
+  #snackbar= message
+  script(type='text/javascript').
+  
+    // 파일 저장
+    var saveFile  = function(fileName, curriId, lecId) {
+      $.ajax({
+        url : '/mypage/apply/'+curriId+'/'+lecId,
+        type: 'post',
+        data: {file_name: fileName},
+        success : function(data) {
+          $('#snackbar').text(data.result_msg);
+          $('#snackbar').addClass('show');
+          setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+        }
+      });  
+    };
+    
+    
+    // 파일 업로드 
+    var upload = function($upFile, curriId, lecId) {
+      var formData = new FormData();
+      formData.append("file", $upFile[0].files[0]);  
+      var result = null;
+      $.ajax({
+        url : '/upload',
+        data : formData,
+        type : 'POST',
+        processData: false,
+        contentType: false,
+        success:function(data) {
+          if(data.result_code == "0001") {
+            var fileName = data.file_name;
+            saveFile(fileName, curriId, lecId);  
+          }
+        }
+      });
+    };
+    
+    // 수강내역, 찜내역 취소    
+    var cancel = function(flag, selectorId, curriId, lecId) {
+      $selector = $(selectorId);
+      $parents = $selector.parent();
+      var message = flag == 'apply' ? '수강' : '찜';
+      message += ' 내역이 존재하지 않습니다.';
+      
+      $.ajax({
+        url : '/mypage/'+flag+'/'+curriId+'/'+lecId,
+        type: 'put',
+        dataType: 'json',
+        success : function(data) {
+          $selector.remove();
+          if($parents.children().length == 0)
+            $parents.append($('<p>'+message+'</p>'));
+        }
+      });  
+    };
+    
+    $(function () {
+      // 파일 업로드 
+      $('input[type=file]').bind('change', function(e) {
+        e.preventDefault();
+        upload($(this), $('#curri_id').val(), $('#lec_id').val());
+      });
+      
+      // 회원탈퇴하기
+      $('#btn_exit').bind('click', function() {
+        if(confirm('정말로 회원을 탈퇴하시겠습니까?')) {        
+          $('#form_exit').submit();
+        }
+      }); 
+      
+      // 메시지 출력하기
+      if($('#snackbar').text() != '') {
+        $('#snackbar').addClass('show');
+        setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+      }
+    });   

@@ -1,0 +1,13 @@
+extends ../layouts/layout_small
+
+block content
+  .xs-container
+    form(action='/find', method='post')
+      .page-header
+        h2 비밀번호 찾기
+        p.text-danger= message
+      .form-group.form-group-lg
+        label(for='email') 회원가입 시 등록한 이메일을 입력하세요
+        input#email.form-control(type='email', placeholder='Email', required='', autofocus='', tabindex='1' name='email')
+        span.help-block
+      button#btn-login.btn.btn-lg.btn-primary.btn-block(type='submit', tabindex='3') 전송

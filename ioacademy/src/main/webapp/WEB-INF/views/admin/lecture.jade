@@ -1,0 +1,184 @@
+extends ../layouts/layout
+
+block content
+  script(src='https://code.jquery.com/ui/1.12.0/jquery-ui.js')
+  .content.con-white
+    .md-container
+      .title
+        h3 강좌개설
+      .row.lecture-form
+        .page-header
+          h2.text-default= val.curri_name
+          p.text-danger= error_message
+        hr  
+        form(action='/lectures/'+id+'/'+lec_id, method='post')
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='lec_kind')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;모집종류
+              .col-md-3.col-xs-6
+                select#lec_kind.form-control(name='lec_kind')
+                  each map in lecKindList
+                      option(value= map.comm_code selected= (val.lec_kind == map.comm_code))= map.comm_name
+              .col-md-3.col-xs-6
+                select#lec_type.form-control(name='lec_type')
+                  each map in lecTypeList
+                      option(value= map.comm_code selected= (val.lec_type == map.comm_code))= map.comm_name
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='start_date')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;강의일정
+              .col-md-3.col-sm-4.col-xs-8
+                #datetimepicker6.input-group.date
+                  input#start_date.form-control(type='text' name='start_date' value=val.start_date autofocus)
+                  span.input-group-addon
+                    i.glyphicon.glyphicon-calendar
+              .col-sm-2.col-xs-4
+                input#start_time.form-control(type='text' name='start_time' value=val.start_time)
+              .col-md-3.col-sm-4.col-xs-8
+                #datetimepicker7.input-group.date
+                  input#end_date.form-control(type='text' name='end_date' value=val.end_date)
+                  span.input-group-addon
+                    span.glyphicon.glyphicon-calendar
+              .col-sm-2.col-xs-4
+                input#end_time.form-control(type='text' name='end_time' value=val.end_time)
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='lec_hour')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;강의 시간
+              .col-sm-3
+                input#lec_hour.form-control(type='text' name='lec_hour' value=val.lec_hour)
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='tuition_fee')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;수강료
+              .col-sm-3
+                input#tuition_fee.form-control(type='text' name='tuition_fee' value=val.tuition_fee)
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='individual_refund')
+                i.fa.fa-caret-square-o-right.text-success
+                | &nbsp;환급금
+              .col-md-3.col-sm-6
+                .input-group
+                  span.input-group-addon
+                    span 개인
+                  input#individual_refund.form-control(type='text' name='individual_refund' value=val.individual_refund)
+              .col-md-3.col-sm-6
+                .input-group
+                  span.input-group-addon
+                    span 중소기업
+                  input#small_com_refund.form-control(type='text' name='small_com_refund' value=val.small_com_refund)
+              .col-md-3.col-sm-6
+                .input-group
+                  span.input-group-addon
+                    span 중견기업
+                  input#medium_com_refund.form-control(type='text' name='medium_com_refund' value=val.medium_com_refund)
+              .col-md-3.col-sm-6
+                .input-group
+                  span.input-group-addon
+                    span 대기업
+                  input#large_com_refund.form-control(type='text' name='large_com_refund' value=val.large_com_refund)
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='lecturer')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;담당강사
+              .col-sm-3
+                input#lecturer.form-control(type='text' name='lecturer' value=val.lecturer)
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='textbook')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;교재
+              .col-sm-3
+                input#textbook.form-control(type='text' name='textbook' value=val.textbook)
+              .col-xs-12
+                span.help-block
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='materials')
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;준비물
+              .col-xs-12
+                input#materials.form-control(type='text' name='materials' value=val.materials)
+              .col-xs-12
+                span.help-block                
+          .row
+            .form-group.form-group-lg
+              input#application_type(type='hidden' value=val.application_type)
+              label.col-xs-12
+                i.fa.fa-caret-square-o-right.text-highlight
+                | &nbsp;지원구분
+              each map in appList
+                .col-md-3
+                  .checkbox
+                    label(for='application_type_'+map.comm_code)
+                      input(type='checkbox' name='application_type' id='application_type_'+map.comm_code value=map.comm_code) 
+                      span= map.comm_name
+          .row
+            .form-group.form-group-lg
+              label.col-xs-12(for='lec_comment')
+                i.fa.fa-caret-square-o-right.text-success
+                | &nbsp;추가안내
+              .col-xs-12
+                textarea#curri_info.form-control(rows='10' placeholder='부가적인 설명을 입력하세요.' name='lec_comment')=val.lec_comment
+                span.help-block
+          .row
+            .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+              .col-xs-6
+                button.btn.btn-outline-save.btn-lg.btn-block(type='submit') 저장
+              .col-xs-6
+                a.btn.btn-outline.btn-lg.btn-block(href='/lectures', role='button') 취소
+  #snackbar= message                
+  script(type='text/javascript').
+    // 지원 구분 셋팅
+    var setCheckbox = function() {
+      var applicationType = $('#application_type').val();
+      var arr = applicationType.split(',');
+      $.each(arr, function(index) {
+        $('#application_type_'+arr[index]).prop('checked', true);
+      });
+    };
+        
+    // 결과 메시지 보여주기 
+    var resultMessage = function() {
+      if($('#snackbar').text() == "")
+        return;
+      $('#snackbar').addClass('show');
+      setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+    };
+    
+    $(function () {
+      // 지원 구분 셋팅
+      setCheckbox();
+      
+      $('#datetimepicker6').datetimepicker({
+        format: 'YYYYMMDD'
+      });
+      $('#datetimepicker7').datetimepicker({
+        format: 'YYYYMMDD',
+        useCurrent: false //Important! See issue #1075
+      });
+      $("#datetimepicker6").on("dp.change", function (e) {
+          $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+      });
+      $("#datetimepicker7").on("dp.change", function (e) {
+          $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+      });
+      
+      // 결과 메시지 화면 출력
+      resultMessage();
+    });

@@ -1,0 +1,44 @@
+// Navigation
+nav.navbar.navbar-default.navbar-fixed-top
+  .container
+    .navbar-header.page-scroll
+      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/')
+        b.text-large IOACADEMY
+    #navbar.navbar-collapse.collapse
+      ul.nav.navbar-nav.navbar-right
+        input#user_info(type='hidden' value=user)
+        li
+          a(href='/courses') 과정안내
+        li
+          a(href='/process') 수강안내
+        if(user && user.priority == 'A')
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+              | 관리자메뉴
+              span.caret
+            ul.dropdown-menu(role='menu')
+              li
+                a(href='/curriculums') 과정개설관리
+              li
+                a(href='/lectures') 강좌개설관리
+              li
+                a(href='/applications') 수강신청관리
+              li
+                a(href='/bookings') 수강예약관리
+              li
+                a(href='/users') 회원정보관리
+        if(user)
+          li
+            a(href='/mypage')= user.name+'님'
+          li
+            a.btn.btn-default.btn-sm(href='/signout', role='button') 로그아웃
+        else
+          li
+            a.btn.btn-primary.btn-sm(href='/signin', role='button') &nbsp;로그인&nbsp;&nbsp;
+          li  
+            a.btn.btn-default.btn-sm(href='/signup', role='button') 회원가입

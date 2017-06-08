@@ -1,0 +1,1367 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #555;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+b {
+  font-weight: 500;
+}
+
+/******************************* 배경색 설정 시작 *******************************/
+.con-default {
+  background-color: #eee;
+}
+
+.con-white {
+  background-color: #fff;
+}
+
+.con-gradient {
+  background-image: -webkit-linear-gradient(270deg, #f5f5f5, #fff);
+  background-image: linear-gradient(180deg, #f5f5f5, #fff);
+  background-repeat: no-repeat;
+  background-size: 100% 200px;
+}
+
+
+/******************************* 버튼 색상 설정 시작 *******************************/
+.btn-default{
+  background-color: #aaa;
+  border-color: #aaa;
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: #19bcb8;
+  border-color: #19bcb8;
+  color: #fff;
+}
+
+.btn-success {
+  background-color: #9bd300;
+  border-color: #9bd300;
+  color: #fff;
+}
+
+.btn-info {
+  background-color: #ff5e73;
+  border-color: #ff5e73;
+  color: #fff;
+}
+
+.btn-warning {
+  background-color: #e69254;
+  border-color: #e69254;
+  color: #fff;
+}
+
+.btn-danger {
+  background-color: #b80003;
+  border-color: #b80003;
+  color: #fff;
+}
+
+.btn-link {
+  background-color: #ff5e73;
+  border-color: #ff5e73;
+  color: #fff;
+}
+
+.btn-outline {
+  color: #19bcb8;
+  background-color: #fff;
+  border-color: #19bcb8;
+}
+
+.btn-outline:active, .btn-outline:focus, .btn-outline:hover {
+  color: #19bcb8;
+  text-shadow: none;
+  -webkit-transform: scale(.97);
+  transform: scale(.97);
+}
+
+.btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: #fff;
+}
+
+.btn-outline-inverse:active, .btn-outline-inverse:focus, .btn-outline-inverse:hover {
+  color: #fff;
+  text-shadow: none;
+  -webkit-transform: scale(.97);
+  transform: scale(.97);
+}
+
+.btn-outline-save {
+  color: #fff;
+  background-color: #19bcb8;
+  border-color: #19bcb8;
+}
+
+.btn-outline-save:active, .btn-outline-save:focus, .btn-outline-save:hover {
+  color: #fff;
+  text-shadow: none;
+  -webkit-transform: scale(.97);
+  transform: scale(.97);
+}
+
+.btn-default:active, .btn-default:focus, .btn-default:hover, .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+  color: #fff;
+  background-color: #d4d4d4;
+  border-color: #aaa;
+}
+
+.btn-info:active, .btn-info:focus, .btn-info:hover, .btn-info.active.focus, .btn-info.active:focus, .btn-info.active:hover, .btn-info:active.focus, .btn-info:active:focus, .btn-info:active:hover, .open>.dropdown-toggle.btn-info.focus, .open>.dropdown-toggle.btn-info:focus, .open>.dropdown-toggle.btn-info:hover {
+  color: #fff;
+  background-color: #e91e63;
+  border-color: #e91e63;
+}
+
+.btn-primary:active, .btn-primary:focus, .btn-primary:hover, .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+  color: #fff;
+  background-color: #009688;
+  border-color: #009688;
+}
+
+/******************************* 버튼 색상 설정 끝 *******************************/
+
+.text-white {
+  color: #fff;
+}
+
+.text-default {
+  color: #555;
+}
+
+.text-primary {
+  color: #19bcb8;
+}
+
+.text-success {
+  color: #aaa;
+}
+
+.text-info {
+  color: #4d5095;
+}
+
+.text-warning {
+  color: #e69254;
+}
+
+.text-danger {
+  color: #b10e14;
+}
+
+.text-link {
+  color: #ff3860;
+}
+
+.text-highlight {
+  color: #19bcb9;
+}
+
+.text-hightitle {
+  color : #007879;
+}
+
+/* Disable ugly boxes around images in IE10 */
+a img{
+  border: 0;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+  outline: 0;
+  color: #ff385f;
+  text-decoration: none;
+}
+
+a.primary,
+a.primary:hover,
+a.primary:focus,
+a.primary:active {
+  color: #0050b8;
+  text-decoration: none;
+}
+
+a.text-default,
+a.text-default:hover,
+a.text-default:focus,
+a.text-default:active {
+  color: #555;
+}
+
+a.text-comment,
+a.text-comment:focus,
+a.text-comment:active {
+  color: #717171;
+}
+
+a.text-comment:hover {
+  text-decoration: underline;
+}
+
+a.text-danger
+a.text-danger:hover,
+a.text-danger:focus,
+a.text-danger:active {
+  color: #b10e14;
+  text-decoration: underline;
+}
+
+a.text-info
+a.text-info:hover,
+a.text-info:focus,
+a.text-info:active {
+  color: #4d5095;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 0 0;
+  border-bottom: 0;
+}
+
+/******************************* 네비게이션바 설정 시작 *******************************/
+.navbar {
+  margin-bottom: 0;
+}
+
+.navbar-default {
+  background-color: #fff;
+  border-color: #e7e7e7;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+  color: #555;
+  background-color: #fff;
+}
+
+.navbar-nav>li>a.btn {
+  margin: 10px 15px;
+  padding: 4px 8px;
+  display: inline-block;
+  color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a.btn-primary:focus, .navbar-default .navbar-nav>li>a.btn-primary:hover {
+  color: #fff;
+  background-color: #009688;
+  border-color: #009688;
+}
+
+.navbar-default .navbar-nav>li>a.btn-default:focus, .navbar-default .navbar-nav>li>a.btn-default:hover {
+  color: #fff;
+  background-color: #d4d4d4;
+  border-color: #aaa;
+}
+
+.navbar-toggle {
+  border: 0;
+}
+
+.dropdown-menu>li>a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #777;
+  white-space: nowrap;
+}
+
+/******************************* 네비게이션바 설정 끝 *******************************/
+
+
+
+
+/******************************* 폼 설정 끝 *******************************/
+
+.form-group-lg .form-control-static,
+.form-group-lg .form-control,
+.input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
+  font-size: 14px;
+}
+
+.form-group-lg .control-label {
+  padding-left: 20px;
+  color: #777;
+}
+
+/******************************* 폼 설정 끝 *******************************/
+
+
+/******************************* 초기화면 이미지 설정 시작 *******************************/
+
+.min-content {
+  min-height: 1200px;
+}
+
+.min-table {
+  min-height: 975px;
+}
+
+.content .container {
+  padding-bottom: 20px;
+}
+
+.con-index > .jumbotron {
+  position: relative;
+  width: auto;
+  height: 280px;
+  background: url('/resources/images/index_small.png') center 30% no-repeat;
+  background-size: cover;
+  visibility: visible;
+  animation-duration: 0.5s;
+  animation-delay: 0.2s;
+}
+
+.con-index .jumbotron .container .text-index h2 {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.con-index .jumbotron .container .text-index h4 {
+  padding-top: 0;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.con-index .jumbotron .container .text-index p {
+  margin-top: 32px;
+  width: 100%;
+}
+
+.con-index .jumbotron .container .empty-box {
+  height: 170px;
+  width: 100%;
+}
+
+.con-index .card-section .more-course {
+  padding: 30px 0 70px 0;
+}
+
+/******************************* 초기화면 이미지 설정 시작 *******************************/
+
+
+.content .card-section .course-link {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  max-width: 255px;
+}
+
+.content .card-section .course-link .caption-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 110;
+  opacity: 0;
+  background: #555;
+  -webkit-transition: all ease .5s;
+  -moz-transition: all ease .5s;
+  transition: all ease .5s;
+}
+
+.content .card-section .course-link .caption-overlay:hover {
+  opacity: 0.9;
+}
+
+.content .card-section .course-link .caption-overlay .caption-content {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 20px;
+  margin-top: -12px;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+}
+
+.content .card-section .course-link .caption-overlay .caption-content i {
+  margin-top: -12px;
+}
+
+.content .card-section .course-info {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  max-width: 255px;
+}
+
+.content .card-section .course-info .caption-content {
+  position: absolute;
+  height: 20px;
+  padding-left: 8px;
+  top: 124px;
+  color: #fff;
+  text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
+  -moz-text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
+  -webkit-text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
+}
+
+.content .card-section .course-info .caption .application_title {
+  font-size : .9em;
+  color: #888;
+  padding-left: 8px;
+}
+
+.content .card-section .course-info .caption .application_text {
+  font-size : .9em;
+  color: #666;
+}
+
+.content .input-group {
+  margin-bottom: 10px;
+}
+
+#map {
+  width:100%;
+  height:300px;
+}
+
+.xs-container {
+  width: 360px;
+  margin: 20px auto;
+  padding : 0 20px 20px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #ddd;
+}
+
+.xs-container .text-right {
+  float: right;
+  font-size: 0.9em;
+}
+
+.xs-container p.go-signup {
+  padding-top: 20px;
+}
+
+.sm-container {
+  width: 360px;
+  margin: 20px auto;
+  padding : 0 20px 20px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.md-container {
+  width: 360px;
+  margin: 20px auto 0 auto;
+  padding : 20px 10px 50px 10px;
+}
+
+.container>.title,
+.md-container>.title {
+  padding: 20px 0;
+}
+
+.address {
+  margin-top: 30px;
+}
+
+.address .fa {
+  padding-right: 10px;
+}
+
+.address .detail {
+  padding-top: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.footer {
+  padding: 20px;
+  color: #fff;
+  background-color : #999;
+  clear: both;
+}
+
+.footer a,
+.footer a:hover,
+.footer a:focus,
+.footer a:active {
+  outline: 0;
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-logo {
+  float: left;  
+}
+
+.footer-menu.pull-right {
+  float: left!important;  
+  clear: both;
+}
+
+.footer ul {
+  list-style-type: none;
+  font-size: 0.9em;
+  -webkit-padding-start: 0;
+}
+
+.footer ul li {
+  float: left;
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.small-footer {
+  padding: 0;
+  font-size: 0.9em;
+}
+
+.card-section .thumbnail {
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+}
+
+.card-section .thumbnail>img {
+  width: 100%;
+  height: 153px;
+}
+
+.card-section .thumbnail .caption .title {
+  min-height: 48px;
+  /*color: #555;*/
+}
+
+.card-section .thumbnail .caption .sub-text {
+  color: #777;
+}
+
+.card-section .thumbnail .status {
+  position: absolute;
+  lefft: 0;
+  top: 0;
+}
+
+/******************************* 과정안내 상세 시작 *******************************/
+
+.detail-course > .jumbotron {
+  background-color: #19bcb8;
+  margin: 0;
+  height: 240px;
+}
+
+.detail-course .jumbotron .container .course-title h1 {
+  min-height: 80px;
+}
+
+.detail-course .jumbotron .container .course-title h4 {
+  display: none;
+}
+
+.detail-course .jumbotron .container .course-title p {
+  margin-top: 32px;
+  width: 100%;
+}
+
+.detail-course .jumbotron .container .course-button {
+  margin-top: 24px;
+}
+
+.detail-course .lecture-info ul {
+  list-style-type: none;
+  border-left: 4px solid #19bcb8;
+  margin: 24px 8px 24px 16px;
+  padding: 0;
+  padding-left: 8px;
+}
+
+.detail-course .lecture-info ul li {
+  margin-bottom: 8px;
+  display: flex;
+}
+
+.detail-course .lecture-info p {
+  margin-left: 24px;
+}
+
+.detail-course .lecture-info ul span.title {
+  min-width: 80px;
+  width: 80px;
+}
+
+
+/*.intro .target,*/
+/*.intro .pre-course,*/
+/*.intro .environment {*/
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  /*width: 150px;*/
+  /*height: 150px;*/
+  /*background: #fff;*/
+  /*border-radius: 50%;*/
+/*}*/
+
+/*.intro .target i,*/
+/*.intro .pre-course i,*/
+/*.intro .environment i {*/
+  /*padding-top: 40px;*/
+/*}*/
+
+.content .card-section .intro .target {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/course_target.png');
+  background-size: cover;
+}
+
+.content .card-section .intro .pre-course {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/course_pre.png');
+  background-size: cover;
+}
+
+.content .card-section .intro .environment {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/course_edu.png');
+  background-size: cover;
+}
+
+.curriculum .sub-section ul {
+  list-style-type: none;
+  border-left: 4px solid #19bcb9;
+  margin: 8px 8px 32px 16px;
+  padding: 0;
+  padding-left: 8px;
+}
+
+.phone .col-sm-3,
+.phone .col-xs-4 {
+  padding-left: 0;
+}
+
+/******************************* 배경색 설정 끝 *******************************/
+.qna, .qna-list {
+  padding-bottom: 50px;  
+}
+
+.qna-list .row {
+  padding-top: 8px;
+}
+
+.qna-list ul.button-right {
+  float: right!important;
+}
+
+.qna-list ul.writer-info>li, .qna-list ul.button-right>li {
+  position: relative;
+  display: block;
+  float: left;
+  padding: 0 5px;
+}
+
+.qna-list .row p {
+  padding: 5px 20px;
+}
+
+.comment-question {
+  padding-top: 16px;
+}
+
+.comment-question h4 {
+  position: relative;
+  color: #ff7979;
+  z-index: 0;
+}
+
+.qna-list .comment-question h4:after {
+  content: '';
+  position: absolute;
+  z-index: -10;
+  width: 30px;
+  height: 30px;
+  left: -8px;
+  top: -4px;
+  background: #fce7e3;
+  border-radius: 30px;
+}
+
+.qna-list .comment-answer h4 {
+  position: relative;
+  color: #fff700;
+  z-index: 0;
+}
+
+.qna-list .comment-answer h4:after {
+  content: '';
+  position: absolute;
+  z-index: -10;
+  width: 30px;
+  height: 30px;
+  left: -7px;
+  top: -4px;
+  background: #8066d3;
+  border-radius: 30px;
+}
+
+.qna-list .comment-question h5, .qna-list .comment-answer h5 {
+  padding-left: 5px;
+}
+
+.qna-list ul.button-right h5 {
+  font-size: 12px;
+  font-weight: normal;
+  padding: 0;
+}
+
+.qna-list .comment-answer .line, .qna-list .comment-reply .line {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-bottom-color: #9a9a9a;
+  clear: both;
+}
+
+.qna-list .comment-answer .clamp, .qna-list .comment-reply .clamp {
+  border-bottom: 1px dotted #9a9a9a;
+  border-left: 1px dotted #9a9a9a;
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+}
+
+
+/* .qna-list .comment-line .line:after {
+  content: '';
+  position: absolute;
+  border-bottom: 1px dotted #9a9a9a;
+  border-left: 1px dotted #9a9a9a;
+  width: 15px;
+  height: 15px;
+  top: 22px;
+  left: 25px;
+} */
+
+/******************************* 과정안내 상세 종료 *******************************/
+
+
+
+
+
+/****************************** 수강안내 시작 ******************************/
+
+.company-process .row,
+.person-process .row,
+.md-container .row {
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+.md-container .lecture-form .row {
+  padding-bottom: 12px;
+}
+
+.person-process ul li:not(:last-child) {
+  padding-bottom: 16px;
+}
+
+.content .card-section .process-info,
+.content .card-section .company-info {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  max-width: 228px;
+}
+
+.content .card-section .company-info {
+  min-height: 300px;
+}
+
+.content .card-section .process-info .thumbnail .caption .title {
+  min-height: 24px;
+}
+
+.content .card-section .process-info .company_step1 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_step1.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .company_step2 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_step2.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .company_step3 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_step3.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .person_step1 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/person_step1.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .person_step2 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/person_step2.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .person_step3 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/person_step3.png');
+  background-size: cover;
+}
+.content .card-section .process-info .person_step4 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/person_step4.png');
+  background-size: cover;
+}
+
+.content .card-section .process-info .person_step5 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/person_step5.png');
+  background-size: cover;
+}
+
+/*.content .card-section .process-target h4 {*/
+  /*color: #9a322d;*/
+/*}*/
+
+/*.content .card-section .process-target span {*/
+  /*color: #fe653d;*/
+/*}*/
+
+.content .card-section .process-target ul {
+  list-style-type: none;
+  border-left: 4px solid #19bcb9;
+  margin: 24px 8px 24px 16px;
+  padding: 0;
+  padding-left: 8px;
+}
+
+.content .card-section .process-step {
+  display: block;
+  position: relative;
+  padding-top: 20px;
+}
+
+
+.dataTable_wrapper table td span.icon {
+  width: 50px;
+}
+
+table a.icon,
+table a.icon:focus,
+table a.icon:active {
+  color: #999;
+}
+
+table a.icon:hover {
+  color: #ff385f;
+}
+
+.table-hover>tbody>tr>td>a:hover  {
+  color: #b10e14;
+  text-decoration: underline;
+}
+
+
+.content ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.content ul .handle {
+  padding-bottom: 10px;
+  cursor: -webkit-grabbing;
+}
+
+
+/******************************* 수강안내 끝 *******************************/
+
+
+/******************************* 마이페이지 시작 *******************************/
+.mypage-content {
+  width: 100%;
+  margin-top: 20px;
+  padding : 20px 10px;
+  border: 1px solid #e3e3e3;
+  border-radius: 2px;
+  background: #f5f5f5;
+}
+
+.mypage-content .form-horizontal .form-group {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.mypage-content .form-group {
+  margin-bottom: 15px;
+}
+
+.mypage-content .form-control-static, .modal-body .form-control-static {
+  padding: 11px 0;
+}
+
+#myinfo .col-md-12 {
+  padding-top: 20px;
+}
+
+#myinfo .form-group .text-center {
+  padding-top: 20px;
+}
+
+#myinfo .password .form-horizontal{
+  padding-top: 17px;
+}
+
+#applicants .card-section .thumbnail,
+#bookings .card-section .thumbnail {
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+#applicants .card-section .thumbnail .button,
+#bookings .card-section .thumbnail .button {
+  height: 40px;
+  background: #aaa;
+  padding: 10px;
+}
+
+#applicants .card-section .thumbnail .button a,
+#bookings .card-section .thumbnail .button a {
+  color: #fff;
+}
+/******************************* 마이페이지 끝 *******************************/
+
+/******************************* 수강신청 시작 *******************************/
+.application ul ul {
+  padding: 20px 8px;
+}
+
+.application p.form-control-static small {
+  font-size: 0.9em;
+  color: #777;
+}
+/******************************* 수강신청 끝 *******************************/
+
+/******************************* 모달 시작 *******************************/
+.modal-header {
+  padding: 20px;
+  background-color: #19bcb8;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.modal-title {
+  color: #fff;  
+  font-size: 20px;
+}
+
+.modal-header button.close {
+  color: #fff;
+  opacity: 0.8;
+}
+
+/******************************* 모달 끝 *******************************/
+
+/******************************* 관리자메뉴 시작 *******************************/
+
+.md-container .lecture-form {
+  width: 100%;
+  height: 100%;
+  padding : 50px 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 2px;
+  background: #f5f5f5;
+}
+
+.md-container .lecture-form img {
+  width: 255px;
+  height: 153px;
+  border: 1px solid #ddd;
+}
+
+.md-container .lecture-form .page-header {
+  padding: 0 15px;
+  margin: 0;
+  border-bottom: 0;
+}
+
+.md-container .lecture-form hr {
+  border-top: 1px solid #ccc;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #4d5095;
+  border-color: #4d5095;
+}
+
+.pagination>li>a, .pagination>li>span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #4d5095;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.well {
+  background-color: #eee;
+}
+
+.filebox, .filebox2 {display:inline-block; margin-right: 10px;}
+
+.filebox input[type="file"], .filebox2 input[type="file"] {  /* 파일 필드 숨기기 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-radius: .25em;
+  margin: 0;
+}
+
+.filebox2 label {
+  display: inline-block;
+  color: #ff385f;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* named upload */
+.filebox .upload-name {
+  display: inline-block;
+  padding: .5em .75em;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+/******************************* 관리자메뉴 끝 *******************************/
+
+
+/******************************* 하단 메뉴 시작 *******************************/
+
+.md-container .company-info1 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_info1.png');
+  background-size: cover;
+}
+
+.md-container .company-info2 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_info2.png');
+  background-size: cover;
+}
+
+.md-container .history1 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_his1.png');
+  background-size: cover;
+}
+
+.md-container .history2 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_his2.png');
+  background-size: cover;
+}
+
+.md-container .history3 {
+  width: 100%;
+  height: 228px;
+  background-image: url('/resources/images/company_his3.png');
+  background-size: cover;
+}
+
+.top {
+  z-index:999;
+  position: absolute;
+}
+
+.top-button {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  /* text-indent: 100%; */
+  /* white-space: nowrap; */
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+  -moz-transition: opacity .3s 0s, visibility 0s .3s;
+  transition: opacity .3s 0s, visibility 0s .3s;
+}
+
+.top-button a {
+  height: 34px;
+  width: 40px;
+  display:table-cell; 
+  text-align:center; 
+  vertical-align:middle;
+  color:#777;
+}
+
+.top-button.top-is-visible {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+  -moz-transition: opacity .3s 0s, visibility 0s 0s;
+  transition: opacity .3s 0s, visibility 0s 0s;
+}
+/******************************* 하단 메뉴 끝 *******************************/
+
+
+/******************************* snackbar *******************************/
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+
+/* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+/******************************* snackbar *******************************/
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 70px;
+  }
+
+  .navbar-nav>li>a.btn {
+    margin: 10px 5px;
+  }
+  
+  .detail-course > .jumbotron {
+    height: 330px;
+  }
+
+  .md-container {
+    width: 720px;
+  }
+
+  .con-index > .jumbotron {
+    position: relative;
+    width: auto;
+    height: 420px;
+    background: url('/resources/images/index_middle.png') center 30% no-repeat;
+    background-size: cover;
+    visibility: visible;
+    animation-duration: 0.5s;
+    animation-delay: 0.2s;
+  }
+  
+  .con-index .jumbotron .container .text-index h2 {
+    font-size: 36px;
+  }
+  
+  .con-index .jumbotron .container .text-index h4 {
+    padding-top: 10px;
+    font-size: 12px;
+  }
+  
+  .con-index .jumbotron .container .empty-box {
+    height: 250px;
+  }
+  
+  .sm-container {
+    width: 720px;
+    margin: 100px auto;
+    padding : 0 30px 30px 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+  }
+
+  .form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .form-horizontal .form-group-lg .control-label {
+    padding-top: 11px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .top-button  {
+    right: 20px;
+    bottom: 40px;
+  }
+    
+  .footer-menu.pull-right {
+    float: right!important;  
+    clear: none;
+  }
+  
+  .footer ul li {
+    float: left;
+    margin-left: 10px;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 992px) {
+
+  .md-container {
+    width: 960px;
+  }
+
+  .con-index > .jumbotron {
+    position: relative;
+    width: auto;
+    height: 800px;
+    background: url('/resources/images/index.png') center 30% no-repeat;
+    background-size: cover;
+    visibility: visible;
+    animation-duration: 0.5s;
+    animation-delay: 0.2s;
+  }
+  
+  .con-index .jumbotron .container .text-index h2 {
+    font-size: 48px;
+  }
+  
+  .con-index .jumbotron .container .text-index h4 {
+    padding-top: 10px;
+    font-size: 18px;
+  }
+  
+  .con-index .jumbotron .container .empty-box {
+    height: 560px;
+  }
+
+  .content .card-section .process-step {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 228px;
+  }
+
+  .detail-course .jumbotron .container .course-title h4 {
+    display: block;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 300;
+    min-height: 40px;
+  }
+
+  .detail-course .jumbotron .container .course-title h1 {
+    min-height: 40px;
+    font-size: 60px;
+  }
+
+  #map {
+    width:100%;
+    height:500px;
+  }
+  
+  .top-button {
+    right: 30px;
+    bottom: 40px;
+  }
+}

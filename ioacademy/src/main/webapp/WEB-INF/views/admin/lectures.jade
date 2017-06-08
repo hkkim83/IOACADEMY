@@ -1,0 +1,178 @@
+extends ../layouts/layout
+
+block content
+  .content.min-content
+    .container
+      .page-header
+        h2 강좌개설관리
+      .row
+        .col-md-offset-8.col-md-4
+          .input-group
+            input#search.form-control(type='text', placeholder='search', aria-label='Text input with dropdown button')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                i.fa.fa-search
+      .dataTable_wrapper
+        .table-responsive.table-container
+          table.table.table-striped.table-hover
+            thead
+              tr
+                th NO
+                th 과정명
+                th 수정
+                th 삭제
+                th 개강
+                th 폐강
+                th 확정
+            tbody
+              each val, index in list
+                tr
+                  td
+                  td
+                    span.text-hightitle
+                      b= '['+val.lec_kind_name+'] ' 
+                    span.text-warning
+                      b= '['+val.lec_type_name+'] ' 
+                    span.text-danger
+                      b= '['+val.lec_status_name+'] ' 
+                    span= '['+val.start_ymd+'] ' 
+                    span= val.curri_name
+                  td
+                    a.icon(href='/lectures/'+val.curri_id+'/'+val.lec_id)
+                      i.fa.fa-cog.fa-2x
+                  td
+                    a.icon(href='javascript:deleteItem('+val.curri_id+','+val.lec_id+','+val.lec_status+')')
+                      i.fa.fa-trash-o.fa-2x
+                  td
+                    a.icon(href='javascript:saveItem('+val.curri_id+','+val.lec_id+',"'+val.lec_status+'","02")')
+                      i.fa.fa-circle-o.fa-2x
+                  td
+                    a.icon(href='javascript:saveItem('+val.curri_id+','+val.lec_id+',"'+val.lec_status+'","99")')
+                      i.fa.fa-times.fa-2x
+                  td
+                    a.icon(href='javascript:saveItem('+val.curri_id+','+val.lec_id+',"'+val.lec_status+'","03")')
+                      i.fa.fa-check.fa-2x
+  #snackbar
+  script(type='text/javascript').
+    var table;
+    
+    var deleteItem = function(curriId, lecId, lecStatus) {
+      var $tr = $('#'+curriId+'_'+lecId);
+      $.ajax({
+        url : '/lectures/'+curriId+'/'+lecId,
+        data: {del_yn: 1},
+        type: 'delete',
+        beforeSend: function() {
+          if(lecStatus == "02" || lecStatus == "03") {
+            alert("모집중이거나 폐강한 강좌만 삭제할 수 있습니다.");
+            return false;
+          } 
+          return confirm('삭제하시겠습니까?');
+        },
+        success : function(data) {
+          if(data.result_code == "0001") {
+            table.row($tr).remove().draw();
+          }
+          $('#snackbar').text(data.result_msg);
+          $('#snackbar').addClass('show');
+          setTimeout(function(){ $('#snackbar').removeClass(); }, 3000);
+        }
+      });
+    };
+    
+    var saveItem = function(curriId, lecId, lecStatus, status) {
+      $.ajax({
+        url : '/lectures/'+curriId+'/'+lecId,
+        type: 'put',
+        dataType: 'json',
+        data: {lec_status: status},
+        beforeSend : function() {
+          // 개강 확정 시 
+          if(status == '02') {
+            if(lecStatus == "02") {
+              alert("이미 개강확정된 강좌입니다. 다시 확인해 보세요.");
+              return false;
+            }
+            if(lecStatus == "03") {
+              alert("이미 수강확정된 강좌입니다.\n수강확정된 강좌는 개강확정할 수 없습니다.");
+              return false;
+            }          
+            if(lecStatus == "99") {
+              alert("이미 폐강된 강좌입니다.\n폐강된 강좌는 개강확정할 수 없습니다.");
+              return false;
+            }
+            return confirm('개강확정하시겠습니까?');
+          }
+          // 폐강 확정 시
+          else if(status == '99') {
+            if(lecStatus == "02") {
+              alert("이미 개강확정된 강좌입니다. \n개강확정된 강좌는 폐강할 수 없습니다.");
+              return false;
+            } 
+            if(lecStatus == "03") {
+              alert("이미 수강확정된 강좌입니다.\n수강확정된 강좌는 폐강할 수 없습니다.");
+              return false;
+            }            
+            if(lecStatus == "99") {
+              alert("이미 폐강된 강좌입니다. 다시 확인해 보세요.");
+              return false;
+            }
+            return confirm('폐강하시겠습니까?');
+          }
+          // 수강 확정 시
+          else if(status == '03') {
+            if(lecStatus == "01") {
+              alert("개강 확정을 먼저 해주세요.");
+              return false;
+            } 
+            if(lecStatus == "99") {
+              alert("이미 폐강된 강좌입니다.\n폐강된 강좌는 수강확정할 수 없습니다.");
+              return false;
+            }            
+            if(lecStatus == "03") {
+              alert("이미 수강확정된 강좌입니다. 다시 확인해 보세요.");
+              return false;
+            }
+            return confirm('수강 확정하시겠습니까?');
+          }
+          return true;
+        },      
+        success : function(data) {
+          location.href='/lectures';
+        }
+      });
+    };
+    
+    $(function () {
+      table = $('table').DataTable({
+        'pageLength': 50,
+        'lengthChange': false,
+        'info': false,
+        'paging': false,
+        'ordering': false,
+        'columns': [
+          {'width': '5%'},
+          {'width': '*'},
+          {'width': '6%'},
+          {'width': '6%'},
+          {'width': '6%'},
+          {'width': '6%'},
+          {'width': '6%'}
+        ],
+        'order': [[1, 'asc']]
+      });
+
+      // 기본 search box 삭제
+      $('#DataTables_Table_0_wrapper div:eq(0)').remove();
+
+      table.on('order.dt search.dt', function () {
+        table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+      }).draw();
+     
+      $('#search').on('keyup', function () {
+        table.search(this.value).draw();
+      });
+    });
+

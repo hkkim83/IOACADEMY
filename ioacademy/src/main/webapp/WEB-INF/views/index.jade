@@ -1,0 +1,94 @@
+extends ./layouts/layout
+
+block content
+  .content.con-default.con-index
+    .jumbotron
+      .container
+        .empty-box
+        .text-index.text-center
+          h2.text-white 가치를 설명하는 것은
+            b &nbsp;광고가 아니라 제품이다.
+          h4.text-white 아아오 교육센터는 좋은 강의를 최우선의 가치로 생각합니다.
+    .container.card-section
+      .title
+        h3 아이오 교육센터 주요 과정
+      .row   
+        each val in list
+          .col-lg-3.col-md-4.col-xs-12
+            a.course-link(href='/courses/' + val.curri_id data-toggle='modal')
+              .caption-overlay
+                .caption-content
+                  i.fa.fa-search-plus.fa-3x
+              .thumbnail
+                img(src='/resources/images/curriculums/' + val.img_file, alt='Generic placeholder image')
+                .caption
+                  h4.title.text-default= val.curri_name
+                  if val.start_date != '99991231' 
+                    p.sub-text= val.start_ymd + '-' + val.end_ymd
+                  else
+                    p.sub-text 개강 미정
+                if val.start_date != '99991231' 
+                  .status
+                    img(src='/resources/images/status_'+val.lec_status+'.png')
+      .row
+        .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3.col-xs-10.col-xs-offset-1
+          .more-course
+            a.btn.btn-lg.btn-info.btn-block(href='/courses', role='button') 더 많은 강좌를 확인해 보세요
+  script(src='//apis.daum.net/maps/maps3.js?apikey=21b4a7137a3433ce0d0b74f05bc8157e')
+  script(type='text/javascript').
+    $(function () {
+      var mapContainer = $('#map')[0], // 지도를 표시할 div
+              mapOption = {
+                // center: new daum.maps.LatLng(37.479069, 126.883705), // 지도의 중심좌표
+                center: new daum.maps.LatLng(37.477487, 126.881666),
+                level: 4 // 지도의 확대 레벨
+              };
+
+      var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+      // 마커가 표시될 위치입니다
+      var markerPosition = new daum.maps.LatLng(37.475487, 126.881666);
+      // 마커를 생성합니다
+      var marker = new daum.maps.Marker({
+        position: markerPosition
+      });
+      // 마커가 지도 위에 표시되도록 설정합니다
+      marker.setMap(map);
+      var iwContent = '<div style="padding:5px;">아이오교육센터<br/>남성프라자 1007호</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+              iwPosition = new daum.maps.LatLng(33.450701, 126.570667); //인포윈도우 표시 위치입니다
+      // 인포윈도우를 생성합니다
+      var infowindow = new daum.maps.InfoWindow({
+        position: iwPosition,
+        content: iwContent
+      });
+      // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+      infowindow.open(map, marker);
+    });
+  .content.con-white
+    .container.address
+      .title
+        h3 아이오 교육센터 만나는 방법
+      .row
+        .col-lg-12
+          a.text-info(href='http://map.daum.net/link/map/아아오교육센터,37.475487,126.881666', target='_blank')
+            #map
+      .row
+        .col-lg-12
+          .detail
+            h4
+              i.fa.fa-map-marker.text-success(aria-hidden='true')
+              | 주소
+            p 서울특별시 금천구 디지털로 130 남성프라자 1007호
+          .detail
+            h4
+              i.fa.fa-phone.text-success(aria-hidden='true')
+              | 전화번호
+            p TEL.&nbsp;
+              span 
+                a.text-default(href='tel:02-857-9591') 02 - 857 - 9591&nbsp;
+              span / FAX. 02 - 857 - 9592
+          .detail
+            h4
+              i.fa.fa-envelope.text-success(aria-hidden='true')
+              | 이메일
+            p
+              a.text-info(href='mailto:admin@ioacademy.co.kr') admin@ioacademy.co.kr
