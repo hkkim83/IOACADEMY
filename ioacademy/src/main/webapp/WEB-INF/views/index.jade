@@ -34,9 +34,16 @@ block content
         .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3.col-xs-10.col-xs-offset-1
           .more-course
             a.btn.btn-lg.btn-info.btn-block(href='/courses', role='button') 더 많은 강좌를 확인해 보세요
+  .modal
+    .index-modal-dialog
+      .modal-content
+        a(href='http://imguru.co.kr')  
+          .imguru-open
   script(src='//apis.daum.net/maps/maps3.js?apikey=21b4a7137a3433ce0d0b74f05bc8157e')
   script(type='text/javascript').
     $(function () {
+      $('.modal').modal();
+      
       var mapContainer = $('#map')[0], // 지도를 표시할 div
               mapOption = {
                 // center: new daum.maps.LatLng(37.479069, 126.883705), // 지도의 중심좌표

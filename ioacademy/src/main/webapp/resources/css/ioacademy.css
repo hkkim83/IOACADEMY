@@ -355,6 +355,25 @@ a.text-info:active {
   padding: 30px 0 70px 0;
 }
 
+.imguru-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  background: #eee;
+}
+
+.imguru-open {
+  width: 800px;
+  height: 500px;
+  background: url('/resources/images/imguru_open.png') center no-repeat;
+  border-radius: 5px;
+}
 /******************************* 초기화면 이미지 설정 시작 *******************************/
 
 
@@ -1303,6 +1322,11 @@ However, delay the fade out process for 2.5 seconds */
     float: left;
     margin-left: 10px;
     margin-right: 0;
+  }
+  
+  .index-modal-dialog {
+    width: 800px;
+    margin: 30px auto;
   }
 }
 
